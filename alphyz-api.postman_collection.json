@@ -1,0 +1,85 @@
+{
+  "info": {
+    "name": "Alphyz API",
+    "_postman_id": "alphyz-collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{api}}/api/health",
+          "host": [
+            "{{api}}"
+          ],
+          "path": [
+            "api",
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cadastro",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\":\"Teste\",\n  \"telefone\":\"11999999999\",\n  \"cep\":\"03673000\",\n  \"rua\":\"Rua X\",\n  \"numero\":\"123\",\n  \"complemento\":\"\",\n  \"cpf\":\"12345678901\",\n  \"email\":\"teste@teste.com\",\n  \"senha\":\"abc123\"\n}"
+        },
+        "url": {
+          "raw": "{{api}}/api/cadastros",
+          "host": [
+            "{{api}}"
+          ],
+          "path": [
+            "api",
+            "cadastros"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\":\"teste@teste.com\",\n  \"senha\":\"abc123\"\n}"
+        },
+        "url": {
+          "raw": "{{api}}/api/auth/login",
+          "host": [
+            "{{api}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "api",
+      "value": "http://localhost:8080"
+    }
+  ]
+}

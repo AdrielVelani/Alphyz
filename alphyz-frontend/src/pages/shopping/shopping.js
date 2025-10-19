@@ -16,30 +16,28 @@ ctx.keys().forEach((k) => {
 const img = (key) => IMGS[key] || null;
 
 export default function Shopping() {
-  // Use os basenames dos arquivos reais em /src/assets
+  // Imagens reais do /src/assets (use os nomes de arquivo sem extensão)
   const recomendados = [
-    { nome: "Top Rosa",        preco: "R$129,90", tamanho: "M", img: img("blusarosa") },
-    { nome: "Regata Cinza",    preco: "R$59,90",  tamanho: "M", img: img("blusacinza") },
-    { nome: "Blusa Floral",    preco: "R$149,90", tamanho: "M", img: img("blusafloral") },
-    { nome: "Vestido Preto",   preco: "R$89,90",  tamanho: "M", img: img("vestidopreto") },
-    { nome: "Bermuda Rosa",    preco: "R$79,90",  tamanho: "M", img: img("bermudarosa") },
-    { nome: "Blusa Preta",     preco: "R$79,90",  tamanho: "M", img: img("blusapreta") },
-    { nome: "Regata Amarela",  preco: "R$79,90",  tamanho: "M", img: img("regataamarela") },
+    { nome: "Camiseta Branca",  preco: "KLV$70",  tamanho: "M", img: img("blusarosa") },
+    { nome: "Camiseta Preta",   preco: "KLV$50",  tamanho: "M", img: img("blusapreta") },
+    { nome: "Casaco Cinza Chumbo", preco: "KLV$150", tamanho: "M", img: img("blusafloral") },
+    { nome: "Casaco Cinza Claro",  preco: "KLV$120", tamanho: "M", img: img("blusacinza") },
+    { nome: "Camisa Flanelada Azul", preco: "KLV$120", tamanho: "M", img: img("bermudarosa") },
   ];
 
-  // Se quiser imagens aqui também, reaproveitei algumas
   const primavera = [
-    { nome: "Vestido Floral Colorido", preco: "R$179,90", img: img("blusafloral") },
-    { nome: "Macacão Preto",          preco: "R$199,90", img: img("blusapreta") },
-    { nome: "Vestido Branco",         preco: "R$149,90", img: img("blusacinza") },
-    { nome: "Vestido Azul",           preco: "R$169,90", img: img("blusarosa") },
+    { nome: "Camiseta Preta",  preco: "KLV$50",  tamanho: "M", img: img("regataamarela") },
+    { nome: "Camiseta Preta",  preco: "KLV$50",  tamanho: "M", img: img("vestidopreto") },
+    { nome: "Casaco Cinza Chumbo", preco: "KLV$150", tamanho: "M", img: img("blusacinza") },
+    { nome: "Casaco Cinza Claro",  preco: "KLV$120", tamanho: "M", img: img("blusafloral") },
+    { nome: "Camisa Flanelada Azul", preco: "KLV$120", tamanho: "M", img: img("blusarosa") },
   ];
 
   const destaque = [
-    { nome: "Camiseta Branca", preco: "R$69,90", img: img("bermudarosa") },
-    { nome: "Camiseta Preta",  preco: "R$69,90", img: img("vestidopreto") },
-    { nome: "Camiseta Cinza",  preco: "R$79,90", img: img("blusacinza") },
-    { nome: "Camisa Xadrez",   preco: "R$99,90", img: img("regataamarela") },
+    { nome: "Camiseta Branca",  preco: "KLV$70",  tamanho: "M", img: img("bermudarosa") },
+    { nome: "Camiseta Preta",   preco: "KLV$50",  tamanho: "M", img: img("vestidopreto") },
+    { nome: "Casaco Cinza Chumbo", preco: "KLV$150", tamanho: "M", img: img("blusacinza") },
+    { nome: "Casaco Cinza Claro",  preco: "KLV$120", tamanho: "M", img: img("regataamarela") },
   ];
 
   const renderProdutos = (produtos) =>
@@ -48,34 +46,58 @@ export default function Shopping() {
         <div className="produto-imagem">
           {p.img ? <img src={p.img} alt={p.nome} /> : <div className="imagem-placeholder">Imagem</div>}
         </div>
+
         <div className="produto-info">
-          <p className="produto-nome">{p.nome}</p>
-          <div className="produto-tamanho-fita">
-            <button className="btn-icon">
-              <img src={fita} alt="Salvar" />
+          <div className="linha-1">
+            <p className="produto-nome">{p.nome}</p>
+            <span className="produto-tamanho">{p.tamanho}</span>
+          </div>
+
+          <div className="linha-2">
+            <span className="produto-preco">{p.preco}</span>
+            <button className="btn-icon btn-salvar" aria-label="Salvar">
+              <img src={fita} alt="" />
             </button>
           </div>
-          <p className="produto-preco">{p.preco}</p>
         </div>
       </div>
     ));
 
   const scrollLeft = (id) => {
     const container = document.getElementById(id);
-    container.scrollBy({ left: -220, behavior: "smooth" });
+    container && container.scrollBy({ left: -240, behavior: "smooth" });
   };
 
   const scrollRight = (id) => {
     const container = document.getElementById(id);
-    container.scrollBy({ left: 220, behavior: "smooth" });
+    container && container.scrollBy({ left: 240, behavior: "smooth" });
   };
+
+  const Secao = ({ id, titulo, produtos, classe = "" }) => (
+    <section className={`secao ${classe}`}>
+      <div className="secao-header">
+        <h2>{titulo}</h2>
+        <a href="#" className="ver-mais">Ver mais</a>
+      </div>
+
+      <div className="carousel-container">
+        <button className="carousel-arrow left" onClick={() => scrollLeft(id)} aria-label="anterior">
+          &#10094;
+        </button>
+        <div className="carousel" id={id}>{renderProdutos(produtos)}</div>
+        <button className="carousel-arrow right" onClick={() => scrollRight(id)} aria-label="próximo">
+          &#10095;
+        </button>
+      </div>
+    </section>
+  );
 
   return (
     <>
-      {/* ---------- HEADER / MENU ---------- */}
+      {/* ---------- HEADER ---------- */}
       <header className="header">
         <div className="header-logo">
-          <img src={logo} alt="logo alphyz" />
+          <img src={logo} alt="Alphyz" />
         </div>
 
         <div className="header-search">
@@ -95,49 +117,39 @@ export default function Shopping() {
           <img src={pergunta} className="header-icon" alt="ajuda" />
           <img src={chat} className="header-icon" alt="chat" />
           <FaShoppingCart className="header-icon" />
-          <a href="/" className="header-login">LOGIN</a>
+          <a href="/login" className="header-login">LOGIN</a>
           <a className="header-btn" href="/cadastro">CADASTRE-SE</a>
         </div>
       </header>
 
+      {/* ---------- CONTEÚDO ---------- */}
       <div className="shopping-container">
-        <section className="secao">
-          <h2>RECOMENDADOS</h2>
-          <div className="carousel-container">
-            <button className="carousel-arrow left" onClick={() => scrollLeft("recomendados")}>&#10094;</button>
-            <div className="carousel" id="recomendados">{renderProdutos(recomendados)}</div>
-            <button className="carousel-arrow right" onClick={() => scrollRight("recomendados")}>&#10095;</button>
-          </div>
-        </section>
-
-        <section className="secao">
-          <h2>PARA PRIMAVERA</h2>
-          <div className="carousel-container">
-            <button className="carousel-arrow left" onClick={() => scrollLeft("primavera")}>&#10094;</button>
-            <div className="carousel" id="primavera">{renderProdutos(primavera)}</div>
-            <button className="carousel-arrow right" onClick={() => scrollRight("primavera")}>&#10095;</button>
-          </div>
-        </section>
-
-        <section className="secao">
-          <h2>DESTAQUE DO DIA</h2>
-          <div className="carousel-container">
-            <button className="carousel-arrow left" onClick={() => scrollLeft("destaque")}>&#10094;</button>
-            <div className="carousel" id="destaque">{renderProdutos(destaque)}</div>
-            <button className="carousel-arrow right" onClick={() => scrollRight("destaque")}>&#10095;</button>
-          </div>
-        </section>
+        <Secao id="recomendados" titulo="RECOMENDADOS" produtos={recomendados} />
+        <Secao id="primavera" titulo="PARA PRIMAVERA" produtos={primavera} classe="secao--primavera" />
+        <Secao id="destaque" titulo="DESTAQUE DO DIA" produtos={destaque} />
       </div>
 
+      {/* ---------- FOOTER ---------- */}
       <footer className="footer">
-        <div className="footer-links">
-          <a href="#">Termos de uso</a>
-          <a href="#">Política de privacidade</a>
-          <a href="#">Contato: alphyz@gmail.com</a>
-          <a href="#">FAQ</a>
-        </div>
-        <p>© 2025 Alphyz. Todos os direitos reservados.</p>
-      </footer>
+  <div className="footer-grid">
+    <div className="foot-col">
+      <a href="#" className="foot-link">Termos de uso</a>
+      <a href="#" className="foot-link">Política de privacidade</a>
+    </div>
+
+    <div className="foot-col foot-center">
+      <span className="foot-muted">Precisa entrar em contato conosco?</span>
+      <a href="mailto:jjfloresmkt@gmail.com" className="foot-link">
+        Email: jjfloresmkt@gmail.com
+      </a>
+    </div>
+
+    <div className="foot-col foot-right">
+      <a href="#" className="foot-link">FAQ</a>
+      <a href="#" className="foot-link">Ajuda</a>
+    </div>
+  </div>
+</footer>
     </>
   );
 }

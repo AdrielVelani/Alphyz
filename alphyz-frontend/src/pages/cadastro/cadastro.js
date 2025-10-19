@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../cadastro/cadastro.css";
 import logo from "../../assets/logo.png";
+import logo_icon from "../../assets/logo_icon.png";
 import { Link } from "react-router-dom";
 import { postJSON } from "../../services/api";
 
@@ -222,9 +223,9 @@ const handleSubmit = async (e) => {
   return (
     <div className="cadastro-container">
       <h2 className="cadastro-title">
-        <span>Seja bem-vindo a</span>
-        <img src={logo} alt="alphyz" className="cadastro-title__logo" />
-        <span>!</span>
+        <span>Faça parte da nossa comunidade</span>
+        <img src={logo_icon} alt="alphyz" className="cadastro-title__logo" />
+        <span></span>
       </h2>
 
       <form onSubmit={handleSubmit} className="cadastro-form">

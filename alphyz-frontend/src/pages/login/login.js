@@ -40,7 +40,7 @@ export default function Login() {
       {/* COLUNA DIREITA: título no topo, formulário, links à esquerda e botão à direita */}
       <div className="login-right">
         <form onSubmit={handleSubmit} className="login-form">
-          <h1 className="login-title">BEM-VINDO DE VOLTA!</h1>
+          <h1 className="login-title">QUE BOM QUE VOCÊ VOLTOU!</h1>
 
           <label>Login</label>
           <input
@@ -60,7 +60,7 @@ export default function Login() {
           <div className="form-footer">
             <div className="links">
               <a href="#">Esqueci a senha</a>
-              <Link to="/cadastro">Ainda não sou cadastrado</Link>
+              <Link to="/cadastro">Cadastre-se</Link>
             </div>
             <button type="submit" className="btn-primary">Enviar</button>
           </div>

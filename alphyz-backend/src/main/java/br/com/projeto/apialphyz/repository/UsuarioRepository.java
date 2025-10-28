@@ -8,4 +8,7 @@ import java.util.List;
 @Repository
 public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     List<Usuario> findByNome(String nome);
+    List<Usuario> findByEmail(String email);
+    Boolean existsByEmail(String email);
+    Boolean existsByCpf(String cpf);
 }

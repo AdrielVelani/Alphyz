@@ -1,18 +1,13 @@
-package br.com.projeto.apialphyz.model;
+package br.com.projeto.apialphyz.dto;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Document(collection = "Usuario")
-public class Usuario {
-    @Id
+public class CadastroUsuarioDTO {
     private String id;
     private String nome;
+    private String email;
     private String senha;
+    private String cpf;
+    private Integer idade;
     private String telefone;
     private String rua;
     private String complemento;
@@ -20,15 +15,6 @@ public class Usuario {
     private Integer cep;
     private String cidade;
     private String estado;
-    private Role role;
-    private List<String> reviews = new ArrayList<>();
-
-
-    @Indexed(unique=true)
-    private String email;
-    @Indexed(unique=true)
-    private String cpf;
-
 
     public String getId() {
         return id;
@@ -70,6 +56,13 @@ public class Usuario {
         this.cpf = cpf;
     }
 
+
+    public Integer getIdade() {
+        return idade;
+    }
+    public void setIdade(Integer idade) {
+        this.idade = idade;
+    }
 
 
     public String getTelefone() {
@@ -115,20 +108,5 @@ public class Usuario {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-
- public Role getRole() {
-        return role;
- }
- public void setRole(Role role) {
-        this.role = role;
- }
- public List<String> getReviews() {
-        return reviews;
-    }
-    public void setReviews(List<String> reviews) {
-        this.reviews = reviews;
-    }
-
-
 
 }

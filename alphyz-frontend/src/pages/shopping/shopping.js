@@ -117,7 +117,7 @@ export default function Shopping() {
           <img src={pergunta} className="header-icon" alt="ajuda" />
           <img src={chat} className="header-icon" alt="chat" />
           <FaShoppingCart className="header-icon" />
-          <a href="/login" className="header-login">LOGIN</a>
+          <a href="/" className="header-login">LOGIN</a>
           <a className="header-btn" href="/cadastro">CADASTRE-SE</a>
         </div>
       </header>

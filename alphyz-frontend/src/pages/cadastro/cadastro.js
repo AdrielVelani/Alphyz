@@ -5,39 +5,8 @@ import logo_icon from "../../assets/logo_icon.png";
 import { Link } from "react-router-dom";
 import { postJSON } from "../../services/api";
 
-
-// === functional-only: coleta robusta de campos do formulário (sem alterar visual) ===
-function mapFormData(form) {
-  const fd = new FormData(form);
-  const map = {};
-  for (const [k, v] of fd.entries()) {
-    map[k.toLowerCase()] = typeof v === 'string' ? v.trim() : v;
-  }
-  const pick = (...patterns) => {
-    for (const p of patterns) {
-      const rx = new RegExp(p, 'i');
-      const key = Object.keys(map).find(k => rx.test(k));
-      if (key) return map[key] || '';
-    }
-    return '';
-  };
-  const onlyDigits = (s) => (s || '').replace(/\D/g, '');
-
-  const payload = {
-    nome: pick('^nome$', 'nomecompleto', 'full.?name'),
-    telefone: pick('tel', 'cel', 'whats', '^telefone$'),
-    cep: onlyDigits(pick('^cep$')),
-    rua: pick('^rua$', 'logradouro', 'endereco'),
-    numero: pick('^numero$', '^num$'),
-    complemento: pick('complemento', 'comp'),
-    cpf: onlyDigits(pick('^cpf$', 'documento')),
-    email: pick('^email$', 'e-?mail'),
-    senha: pick('^senha$', 'pass(word)?')
-  };
-  return payload;
-}
-
 export default function Cadastro() {
+  // Estado do formulário (visual inalterado)
   const [formData, setFormData] = useState({
     nome: "",
     telefone: "",
@@ -51,7 +20,8 @@ export default function Cadastro() {
     email: "",
     senha: "",
     termos: false,
-    privacidade: false});
+    privacidade: false,
+  });
 
   const [estados, setEstados] = useState([]);
   const [cidades, setCidades] = useState([]);
@@ -61,78 +31,87 @@ export default function Cadastro() {
   const [loadingCEP, setLoadingCEP] = useState(false);
   const [cepErro, setCepErro] = useState("");
 
-  // Fallback simples (caso a API do IBGE falhe)
+  // Fallback simples (se IBGE falhar)
   const cidadesFallback = {
     SP: ["São Paulo", "Campinas", "Santos", "São José dos Campos", "Ribeirão Preto"],
     RJ: ["Rio de Janeiro", "Niterói", "Petrópolis", "Volta Redonda", "Campos dos Goytacazes"],
     MG: ["Belo Horizonte", "Uberlândia", "Juiz de Fora", "Contagem", "Uberaba"],
-    ES: ["Vitória", "Vila Velha", "Serra", "Cariacica", "Guarapari"]};
+    ES: ["Vitória", "Vila Velha", "Serra", "Cariacica", "Guarapari"],
+  };
 
-  // Carrega ESTADOS (IBGE)
-  useEffect(() => {
-    const fetchEstados = async () => {
-      try {
-        setLoadingEstados(true);
-        const res = await fetch(
-          "https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome"
-        );
-        const data = await res.json(); // [{id, sigla, nome}]
-        setEstados(data);
-      } catch {
-        // Sudeste como fallback
-        setEstados([
-          { sigla: "ES", nome: "Espírito Santo" },
-          { sigla: "MG", nome: "Minas Gerais" },
-          { sigla: "RJ", nome: "Rio de Janeiro" },
-          { sigla: "SP", nome: "São Paulo" }]);
-      } finally {
-        setLoadingEstados(false);
-      }
-    };
-    fetchEstados();
-  }, []);
-
-  // Carrega CIDADES quando muda o ESTADO
-  useEffect(() => {
-    if (!formData.estado) {
-      setCidades([]);
-      return;
-    }
-    const fetchCidades = async () => {
-      try {
-        setLoadingCidades(true);
-        const res = await fetch(
-          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${formData.estado}/municipios?orderBy=nome`
-        );
-        const data = await res.json(); // [{id, nome}]
-        const nomes = data.map((c) => c.nome);
-        setCidades(nomes);
-
-        // Se já houver uma cidade setada (p.ex. vinda do CEP), mantém
-        // desde que exista na lista recém-carregada.
-        if (formData.cidade && !nomes.includes(formData.cidade)) {
-          setFormData((prev) => ({ ...prev, cidade: "" }));
-        }
-      } catch {
-        const nomes = cidadesFallback[formData.estado] || [];
-        setCidades(nomes);
-      } finally {
-        setLoadingCidades(false);
-      }
-    };
-    fetchCidades();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData.estado]);
-
-  // Helpers CEP
-  const onlyDigits = (v) => v.replace(/\D/g, "");
+  // Helpers CEP/máscaras
+  const onlyDigits = (v) => (v || "").replace(/\D/g, "");
   const formatCEP = (v) => {
     const d = onlyDigits(v).slice(0, 8);
     if (d.length <= 5) return d;
     return `${d.slice(0, 5)}-${d.slice(5)}`;
   };
 
-  // Busca CEP na ViaCEP e preenche Rua/UF/Cidade
+  // Carregar UFs
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        setLoadingEstados(true);
+        const res = await fetch(
+          "https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome"
+        );
+        const data = await res.json(); // [{id, sigla, nome}]
+        if (!alive) return;
+        setEstados(data);
+      } catch {
+        // Sudeste fallback
+        setEstados([
+          { sigla: "ES", nome: "Espírito Santo" },
+          { sigla: "MG", nome: "Minas Gerais" },
+          { sigla: "RJ", nome: "Rio de Janeiro" },
+          { sigla: "SP", nome: "São Paulo" },
+        ]);
+      } finally {
+        setLoadingEstados(false);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  // Carregar cidades ao trocar UF
+  useEffect(() => {
+    const uf = formData.estado;
+    if (!uf) {
+      setCidades([]);
+      return;
+    }
+    let alive = true;
+    (async () => {
+      try {
+        setLoadingCidades(true);
+        const res = await fetch(
+          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios?orderBy=nome`
+        );
+        const data = await res.json(); // [{id, nome}]
+        if (!alive) return;
+        const nomes = data.map((c) => c.nome);
+        setCidades(nomes);
+        // se cidade atual não estiver na lista, limpa
+        if (formData.cidade && !nomes.includes(formData.cidade)) {
+          setFormData((p) => ({ ...p, cidade: "" }));
+        }
+      } catch {
+        const nomes = cidadesFallback[uf] || [];
+        setCidades(nomes);
+      } finally {
+        setLoadingCidades(false);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData.estado]);
+
+  // ViaCEP: ao completar 8 dígitos (ou blur), preenche rua/UF/cidade
   const lookupCEP = async (cepDigits) => {
     if (cepDigits.length !== 8) return;
     try {
@@ -140,11 +119,10 @@ export default function Cadastro() {
       setCepErro("");
       const res = await fetch(`https://viacep.com.br/ws/${cepDigits}/json/`);
       const data = await res.json();
-      if (data.erro) {
+      if (data?.erro) {
         setCepErro("CEP não encontrado.");
         return;
       }
-
       const uf = data.uf || "";
       const cidade = data.localidade || "";
       const rua = data.logradouro || "";
@@ -153,9 +131,9 @@ export default function Cadastro() {
         ...prev,
         rua,
         estado: uf,
-        cidade}));
-      // O efeito de "estado" carregará a lista de cidades;
-      // mantemos o valor já preenchido em 'cidade'.
+        cidade,
+      }));
+      // efeito de estado recarrega a lista e mantemos a cidade se existir
     } catch {
       setCepErro("Não foi possível buscar o CEP. Tente novamente.");
     } finally {
@@ -163,62 +141,63 @@ export default function Cadastro() {
     }
   };
 
-  // Handlers
+  // Mudanças de input
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
     if (name === "cep") {
       const digits = onlyDigits(value);
       setFormData((prev) => ({ ...prev, cep: digits }));
-      // Busca automática ao atingir 8 dígitos
       if (digits.length === 8) lookupCEP(digits);
       else setCepErro("");
       return;
     }
 
-    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
+    setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
-  // === handler funcional (visual intacto) ===
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const form = e.target;
+  // === ÚNICO handleSubmit (sem mexer no visual) ===
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const get = (name) => (form.elements[name]?.value ?? "").trim();
-  const onlyDigits = (s) => (s || "").replace(/\D/g, "");
+    // monta o payload exatamente como o back espera
+    const payload = {
+      nome: formData.nome.trim(),
+      telefone: formData.telefone.trim(),
+      cep: onlyDigits(formData.cep),
+      rua: formData.rua.trim(),
+      numero: formData.numero.trim(),
+      complemento: formData.complemento.trim(), // opcional
+      cpf: onlyDigits(formData.cpf),
+      email: formData.email.trim(),
+      senha: formData.senha,
+    };
 
-  const payload = {
-    nome: get("nome"),
-    telefone: get("telefone"),
-    cep: onlyDigits(get("cep")),          // 8 dígitos
-    rua: get("rua"),
-    numero: get("numero"),
-    complemento: get("complemento"),     // opcional
-    cpf: onlyDigits(get("cpf")),          // 11 dígitos
-    email: get("email"),
-    senha: get("senha"),
-  };
-
-  // Checagem rápida no cliente (só pra evitar 400 genérico):
-  const faltando = Object.entries(payload).find(([k, v]) => k !== "complemento" && !v);
-  if (faltando) {
-    alert(`Campo obrigatório faltando: ${faltando[0]}`);
-    return;
-  }
-
-  try {
-    console.log("Cadastro payload:", payload); // ajuda a conferir no DevTools
-    const data = await postJSON("/api/cadastros", payload);
-    if (data?.token) {
-      localStorage.setItem("auth_token", data.token);
-      localStorage.setItem("auth_user", JSON.stringify(data.usuario || {}));
-      window.location.href = "/home";
+    // valida obrigatórios (complemento é opcional)
+    const faltando = Object.entries(payload).find(([k, v]) => k !== "complemento" && !v);
+    if (faltando) {
+      alert(`Campo obrigatório faltando: ${faltando[0]}`);
+      return;
     }
-  } catch (err) {
-    console.error(err);
-    alert(err.message || "Falha no cadastro");
-  }
-};
+    if (!formData.termos || !formData.privacidade) {
+      alert("Confirme os termos e a política de privacidade.");
+      return;
+    }
+
+    try {
+      const data = await postJSON("/autenticar/cadastrar", payload);
+      if (data?.token) {
+        localStorage.setItem("auth_token", data.token);
+        localStorage.setItem("auth_user", JSON.stringify(data.usuario || {}));
+      }
+      alert("Cadastro realizado com sucesso!");
+      // pedido anterior: após cadastro, ir para LOGIN (não home)
+      window.location.href = "/";
+    } catch (err) {
+      console.error(err);
+      alert(err?.message || "Falha no cadastro");
+    }
+  };
 
   return (
     <div className="cadastro-container">
@@ -271,7 +250,6 @@ const handleSubmit = async (e) => {
 
         {/* Coluna DIREITA */}
         <div className="col">
-          {/* Estado e Cidade lado a lado */}
           <div className="field-row">
             <div className="field">
               <label>Estado</label>
@@ -352,21 +330,4 @@ const handleSubmit = async (e) => {
       </form>
     </div>
   );
-}
-
-async function handleSubmit(e) {
-  e.preventDefault();
-  const form = e.target;
-  const payload = mapFormData(form);
-  try {
-    const data = await postJSON('/api/cadastros', payload);
-    if (data?.token) {
-      localStorage.setItem('auth_token', data.token);
-      localStorage.setItem('auth_user', JSON.stringify(data.usuario || {}));
-      window.location.href = '/';
-    }
-  } catch (err) {
-    console.error(err);
-    alert(err.message || 'Falha no cadastro');
-  }
 }

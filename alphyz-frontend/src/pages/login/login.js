@@ -1,32 +1,39 @@
-
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../login/login.css";
-import { postJSON } from "../../services/api";
+// src/pages/login/login.js
+import React, { useState } from 'react';
+import { postJSON } from '../../services/api';
 
+// Fallback: se houver um logo branco, troque a importação abaixo.
+// import logoWhite from '../../assets/logo_white.png';
+import logo from '../../assets/logobranco.png';
+const logoWhite = logo;
 
-import logoWhite from "../../assets/logobranco.png";   // logo branco (lado esquerdo)
-
-export default function Login() {
-  const [login, setLogin] = useState("");
-  const [senha, setSenha] = useState("");
+export default function LoginPage() {
+  const [email, setEmail]     = useState('');
+  const [senha, setSenha]     = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
-  e.preventDefault();
-  try {
-    await postJSON("/api/auth/login", { email: login, senha });
-    alert("Login OK");
-    window.location.href = '/shopping';
-    // TODO: redirecionar se quiser
-  } catch (e) {
-    alert(typeof e?.message === "string" ? e.message : "Falha no login");
-  }
-}
-
-  const enviarFormulario = (e) => {
     e.preventDefault();
-    console.log("Login:", login, "Senha:", senha);
-  };
+    if (loading) return;
+    setLoading(true);
+    try {
+      const data = await postJSON('/autenticar/login', { email, password: senha });
+      if (data?.token) {
+        localStorage.setItem('auth_token', data.token);
+        if (data.usuario) localStorage.setItem('auth_user', JSON.stringify(data.usuario));
+        window.location.href = '/shopping'; // mantém o fluxo
+      } else {
+        alert('Resposta sem token.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err?.message || 'Falha no login');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="login-container">
@@ -42,18 +49,22 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="login-form">
           <h1 className="login-title">QUE BOM QUE VOCÊ VOLTOU!</h1>
 
-          <label>Login</label>
+          <label>E-mail</label>
           <input
-            type="text"
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
+            type="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
           />
 
           <label>Senha</label>
           <input
             type="password"
+            name="senha"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
+            autoComplete="current-password"
           />
 
           {/* rodapé do formulário: links à esquerda, botão à direita */}
@@ -62,7 +73,9 @@ export default function Login() {
               <a href="#">Esqueci a senha</a>
               <Link to="/cadastro">Cadastre-se</Link>
             </div>
-            <button type="submit" className="btn-primary">Enviar</button>
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? 'Entrando...' : 'Enviar'}
+            </button>
           </div>
         </form>
       </div>

@@ -7,7 +7,7 @@ import LoginPage  from "./pages/login/login";
 import Perfil     from "./pages/perfil/perfil";
 import Home       from "./pages/home/home";       // ajuste o caminho se for diferente
 import Cadastro   from "./pages/cadastro/cadastro"; // se não existir, crie um stub simples
-
+import Produto   from "./pages/produto/produto";
 
 const isAuth = () => {
   try { const t = localStorage.getItem("token"); return !!t && t !== "null" && t !== "undefined"; }
@@ -23,6 +23,8 @@ export default function App() {
       <Route path="/home" element={<Home />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/cadastro" element={<Cadastro />} />
+      <Route path="/produto" element={<Produto />} />
+
 
       <Route path="/perfil" element={<Protected><Perfil /></Protected>} />
       <Route path="/perfil/:id" element={<Perfil />} />

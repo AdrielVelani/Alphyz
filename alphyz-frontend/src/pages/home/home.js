@@ -6,14 +6,16 @@ import logo from "../../assets/logobranco.png";
 export default function Home() {
   return (
     <div className="home-container">
-      {/* Logo */}
+      {/* Logo -> /shopping */}
       <motion.div
         className="logo-box"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <img src={logo} alt="alphyz" className="logo-img" />
+        <a href="/shopping" aria-label="Voltar para a loja">
+          <img src={logo} alt="alphyz" className="logo-img" />
+        </a>
       </motion.div>
 
       {/* Texto */}

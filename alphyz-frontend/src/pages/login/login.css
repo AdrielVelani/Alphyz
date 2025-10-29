@@ -1,3 +1,6 @@
+/* ====== Reset mínimo ====== */
+* { box-sizing: border-box; }
+
 /* ====== Layout base: duas colunas (55% | 45%) ====== */
 .login-container{
   display: grid;
@@ -26,7 +29,7 @@
   background: #fff;
   display: flex;
   justify-content: center;   /* centro na horizontal */
-  align-items: center;       /* <<< centro na vertical */
+  align-items: center;       /* centro na vertical */
   padding: clamp(24px, 6vw, 64px);
 }
 
@@ -68,6 +71,12 @@
   box-shadow: 0 0 0 3px rgba(106, 13, 173, .15);
 }
 
+.login-erro{
+  margin-top: 12px;
+  color: #b00020;
+  font-size: 14px;
+}
+
 /* ====== Rodapé: links à esquerda | botão à direita ====== */
 .form-footer{
   display: flex;
@@ -99,22 +108,23 @@
   border-radius: 12px;
   cursor: pointer;
   white-space: nowrap;
-  transition: transform .06s ease, background .2s ease;
+  transition: transform .06s ease, background .2s ease, opacity .2s;
 }
 .btn-primary:hover{ background: #5a0aa3; transform: translateY(-1px); }
 .btn-primary:active{ transform: translateY(0); }
+.btn-primary:disabled{ opacity: .6; cursor: not-allowed; }
 
 /* ====== Responsivo ====== */
 @media (max-width: 900px){
   .login-container{ grid-template-columns: 1fr; }
   .login-left{ display: none; }
   .login-right{
-  background: #fff;
-  display: flex;
-  justify-content: center;   /* centro na horizontal */
-  align-items: center;       /* <<< centro na vertical */
-  padding: clamp(24px, 6vw, 64px);
-}
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: clamp(24px, 6vw, 64px);
+  }
   .form-footer{
     flex-direction: column;
     align-items: stretch;

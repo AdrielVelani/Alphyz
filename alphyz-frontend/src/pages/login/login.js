@@ -1,35 +1,58 @@
-import { Link } from "react-router-dom";
-import "../login/login.css";
-// src/pages/login/login.js
-import React, { useState } from 'react';
-import { postJSON } from '../../services/api';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./login.css";
 
-// Fallback: se houver um logo branco, troque a importação abaixo.
-// import logoWhite from '../../assets/logo_white.png';
-import logo from '../../assets/logobranco.png';
-const logoWhite = logo;
+import {
+  login as apiLogin,
+  setToken,
+  setUser,
+  clearAuth,
+  me as apiMe,
+} from "../../services/api"; // ← removidos getUser/setUserId (causavam erro)
+import logo from "../../assets/logobranco.png";
 
 export default function LoginPage() {
-  const [email, setEmail]     = useState('');
-  const [senha, setSenha]     = useState('');
+  const nav = useNavigate();
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
+  const [erro, setErro] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
     if (loading) return;
+
+    setErro("");
     setLoading(true);
+
     try {
-      const data = await postJSON('/autenticar/login', { email, password: senha });
-      if (data?.token) {
-        localStorage.setItem('auth_token', data.token);
-        if (data.usuario) localStorage.setItem('auth_user', JSON.stringify(data.usuario));
-        window.location.href = '/shopping'; // mantém o fluxo
+      // seu backend: POST /autenticar/login { email, password }
+      const data = await apiLogin({ email, password: senha });
+
+      const token = data?.token || data?.accessToken;
+      if (!token) throw new Error("Resposta sem token.");
+
+      // salva token para as próximas chamadas
+      setToken(token);
+
+      // tenta pegar o usuário logado
+      const userFromResponse = data?.usuario || data?.user || data?.userData;
+      if (userFromResponse) {
+        setUser(userFromResponse);
       } else {
-        alert('Resposta sem token.');
+        try {
+          const me = await apiMe();
+          if (me) setUser(me);
+        } catch {
+          /* ok */
+        }
       }
+
+      nav("/perfil", { replace: true });
     } catch (err) {
       console.error(err);
-      alert(err?.message || 'Falha no login');
+      setErro(err?.message || "Não foi possível fazer login.");
+      clearAuth();
     } finally {
       setLoading(false);
     }
@@ -37,44 +60,50 @@ export default function LoginPage() {
 
   return (
     <div className="login-container">
-      {/* COLUNA ESQUERDA: fundo escuro + logo centralizado */}
+      {/* Coluna esquerda (branding) — mantém as classes do seu CSS */}
       <div className="login-left">
         <div className="left-brand">
-          <img src={logoWhite} alt="alphyz" className="left-logo" />
+          <a href="/shopping" aria-label="Voltar para a loja">
+            <img src={logo} alt="alphyz" className="left-logo" />
+          </a>
         </div>
       </div>
 
-      {/* COLUNA DIREITA: título no topo, formulário, links à esquerda e botão à direita */}
+      {/* Coluna direita (form) — markup original preservado */}
       <div className="login-right">
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className="login-form" noValidate>
           <h1 className="login-title">QUE BOM QUE VOCÊ VOLTOU!</h1>
 
-          <label>E-mail</label>
+          <label htmlFor="email">E-mail</label>
           <input
+            id="email"
             type="email"
-            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
+            required
           />
 
-          <label>Senha</label>
+          <label htmlFor="senha">Senha</label>
           <input
+            id="senha"
             type="password"
-            name="senha"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
             autoComplete="current-password"
+            required
           />
 
-          {/* rodapé do formulário: links à esquerda, botão à direita */}
+          {erro && <p className="login-erro" role="alert">{erro}</p>}
+
           <div className="form-footer">
             <div className="links">
-              <a href="#">Esqueci a senha</a>
+              <a href="#" onClick={(e) => e.preventDefault()}>Esqueci a senha</a>
               <Link to="/cadastro">Cadastre-se</Link>
             </div>
+
             <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? 'Entrando...' : 'Enviar'}
+              {loading ? "Entrando..." : "Enviar"}
             </button>
           </div>
         </form>

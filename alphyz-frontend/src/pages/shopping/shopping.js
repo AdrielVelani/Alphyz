@@ -5,6 +5,10 @@ import logo from "../../assets/logo.png";
 import pergunta from "../../assets/pergunta.png";
 import chat from "../../assets/chat.png";
 import fita from "../../assets/fita.png";
+import { FaUserCircle } from "react-icons/fa";
+import { getToken, clearAuth } from "../../services/api";
+import SiteHeader from "../../components/SiteHeader"; // ajuste o caminho se necessário
+
 
 // Carrega todas as imagens da pasta /src/assets (png/jpg/jpeg/webp)
 const ctx = require.context("../../assets", false, /\.(png|jpe?g|webp)$/i);
@@ -94,33 +98,7 @@ export default function Shopping() {
 
   return (
     <>
-      {/* ---------- HEADER ---------- */}
-      <header className="header">
-        <div className="header-logo">
-          <img src={logo} alt="Alphyz" />
-        </div>
-
-        <div className="header-search">
-          <FaSlidersH className="search-icon-left" />
-          <div className="search-wrapper">
-            <input
-              type="text"
-              placeholder="O que você está buscando?"
-              className="search-input"
-            />
-            <FaSearch className="search-icon-right" />
-          </div>
-        </div>
-
-        <div className="header-right">
-          <a href="#" className="header-link">SOBRE NÓS</a>
-          <img src={pergunta} className="header-icon" alt="ajuda" />
-          <img src={chat} className="header-icon" alt="chat" />
-          <FaShoppingCart className="header-icon" />
-          <a href="/" className="header-login">LOGIN</a>
-          <a className="header-btn" href="/cadastro">CADASTRE-SE</a>
-        </div>
-      </header>
+      <SiteHeader />
 
       {/* ---------- CONTEÚDO ---------- */}
       <div className="shopping-container">

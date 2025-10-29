@@ -218,3 +218,7 @@ body { overflow-x: hidden; font-family: "Poppins", sans-serif; color:#222; }
   }
   .secao .carousel-arrow{ width:36px; height:36px; }
 }
+/* garante tamanho e cor do ícone do usuário, sem afetar outros ícones */
+.header-icon.user { color: #000 !important; }
+.header-icon.user svg { width: 22px; height: 22px; display: block; }
+

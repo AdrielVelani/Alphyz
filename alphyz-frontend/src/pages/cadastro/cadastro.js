@@ -3,7 +3,7 @@ import "../cadastro/cadastro.css";
 import logo from "../../assets/logo.png";
 import logo_icon from "../../assets/logo_icon.png";
 import { Link } from "react-router-dom";
-import { postJSON } from "../../services/api";
+import { API_BASE } from "../../services/api"; // ← trocado: usar API_BASE no POST
 
 export default function Cadastro() {
   // Estado do formulário (visual inalterado)
@@ -156,11 +156,10 @@ export default function Cadastro() {
     setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
-  // === ÚNICO handleSubmit (sem mexer no visual) ===
+  // === SUBMISSÃO (mantendo visual; só o POST foi trocado) ===
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // monta o payload exatamente como o back espera
     const payload = {
       nome: formData.nome.trim(),
       telefone: formData.telefone.trim(),
@@ -171,9 +170,12 @@ export default function Cadastro() {
       cpf: onlyDigits(formData.cpf),
       email: formData.email.trim(),
       senha: formData.senha,
+      // estado e cidade são exibidos mas seu back atual salva rua/cep/…;
+      // se precisar enviar, inclua:
+      // estado: formData.estado,
+      // cidade: formData.cidade,
     };
 
-    // valida obrigatórios (complemento é opcional)
     const faltando = Object.entries(payload).find(([k, v]) => k !== "complemento" && !v);
     if (faltando) {
       alert(`Campo obrigatório faltando: ${faltando[0]}`);
@@ -185,14 +187,25 @@ export default function Cadastro() {
     }
 
     try {
-      const data = await postJSON("/autenticar/cadastrar", payload);
+      const res = await fetch(`${API_BASE}/autenticar/cadastrar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        throw new Error(txt || `Erro ${res.status}`);
+      }
+
+      const data = await res.json().catch(() => ({}));
       if (data?.token) {
         localStorage.setItem("auth_token", data.token);
         localStorage.setItem("auth_user", JSON.stringify(data.usuario || {}));
       }
+
       alert("Cadastro realizado com sucesso!");
-      // pedido anterior: após cadastro, ir para LOGIN (não home)
-      window.location.href = "/";
+      window.location.href = "/"; // volta pro Login (como antes)
     } catch (err) {
       console.error(err);
       alert(err?.message || "Falha no cadastro");
@@ -324,7 +337,7 @@ export default function Cadastro() {
           <button type="submit" className="btn-enviar">Enviar</button>
 
           <p className="voltar-login">
-            <Link to="/">Já possuo conta (fazer login)</Link>
+            <Link to="/login">Já possuo conta (fazer login)</Link>
           </p>
         </div>
       </form>

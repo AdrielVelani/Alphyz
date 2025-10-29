@@ -136,6 +136,7 @@ body {
   flex-direction: row;
   align-items: flex-start;
   gap: 20px;
+  margin-left: 30px;
 }
 
 .thumbs {
@@ -194,15 +195,15 @@ body {
 
 /* ====== CARD DE COMPRA ====== */
 .purchase-card {
-  background-color: #f8f8f8;
+  background-color: #fff;
   border-radius: 10px;
   padding: 25px;
-  width: 300px;
+  width: 360px;
   height: 460px;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.363);
   flex-shrink: 0;
   margin-right: 20vh;
 }
@@ -279,6 +280,7 @@ body {
 
 .seller-name {
   font-weight: 600;
+  align-items: center;
 }
 
 .seller-rating {
@@ -286,11 +288,14 @@ body {
   color: #ffb400;
 }
 
-.verified {
-  color: #2ecc71;
-  margin-left: 0px;
+.seller-name img {
+  width: 16px;              /* tamanho do ícone */
+  height: 16px;
+  margin-left: 5px;         /* espaço entre o nome e o ícone */
+  vertical-align: middle;   /* alinha o ícone ao meio da linha do texto */
+  position: relative;
+  top: -1px;                /* ajuste fino — pode usar 0, -1 ou -2px */
 }
-
 /* ====== DESCRIÇÃO ====== */
 .details {
   width: 100%;
@@ -369,7 +374,14 @@ body {
   width: 100%;
   max-width: 600px;
 }
-
+.ann-name img {
+  width: 16px;              /* tamanho do ícone */
+  height: 16px;
+  margin-left: 5px;         /* espaço entre o nome e o ícone */
+  vertical-align: middle;   /* alinha o ícone ao centro do texto */
+  position: relative;
+  top: -1px;                /* ajuste fino, pode testar 0, -1 ou -2 */
+}
 /* ====== CARROSSEL ====== */
 .carousel-section {
   margin-top: 40px;

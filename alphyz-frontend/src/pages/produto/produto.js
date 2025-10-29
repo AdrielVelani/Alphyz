@@ -10,6 +10,7 @@ import camisa3 from "../../assets/blusarosa.jpeg";
 import camisa4 from "../../assets/vestidopreto.jpeg";
 import perfil from "../../assets/perfil.png";
 import check from "../../assets/check.png";
+import fita from "../../assets/fita.png";
 
 const userDefault = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
@@ -31,36 +32,17 @@ export default function DetalhesProduto() {
   };
 
   // Itens de recomendados e do mesmo vendedor
-  const recomendados = [{
-    nome: "Blusa Cinza",
-    preco: 120,
-    imagem: camisa2,
-  },
-  {
-    nome: "Blusa Rosa",
-    preco: 140,
-    imagem: camisa3,
-  },
-  {
-    nome: "Vestido Preto",
-    preco: 200,
-    imagem: camisa4,
-  },];
-  const maisDoVendedor = [{
-    nome: "Blusa Cinza",
-    preco: 120,
-    imagem: camisa2,
-  },
-  {
-    nome: "Blusa Rosa",
-    preco: 140,
-    imagem: camisa3,
-  },
-  {
-    nome: "Vestido Preto",
-    preco: 200,
-    imagem: camisa4,
-  },];
+  const recomendados = [
+  { nome: "Bermuda Rosa", preco: 70, tamanho: "M", img: camisa1 },
+  { nome: "Regata Cinza", preco: 50, tamanho: "M", img: camisa2 },
+  { nome: "Top Rosa", preco: 150, tamanho: "M", img: camisa3 },
+  ];
+
+  const maisDoVendedor = [
+  { nome: "Bermuda Rosa", preco: 90, tamanho: "M", img: camisa1 },
+  { nome: "Regata Cinza", preco: 120, tamanho: "M", img: camisa2 },
+  { nome: "Top Rosa", preco: 200, tamanho: "M", img: camisa3 },
+];
 
   const [mainImg, setMainImg] = useState(produto.imagens[0]);
 
@@ -216,6 +198,7 @@ export default function DetalhesProduto() {
                     <img src={item.img} alt={item.nome} />
                     <div className="nome">{item.nome}</div>
                     <div className="preco">KLV$ {item.preco}</div>
+                    <div className="preco">{item.tamanho}</div>
                   </div>
                 ))}
               </div>
@@ -248,6 +231,7 @@ export default function DetalhesProduto() {
                     <img src={item.img} alt={item.nome} />
                     <div className="nome">{item.nome}</div>
                     <div className="preco">KLV$ {item.preco}</div>
+                    <div className="preco">{item.tamanho}</div>
                   </div>
                 ))}
               </div>
@@ -288,7 +272,7 @@ export default function DetalhesProduto() {
             />
             <div className="seller-info">
               <div className="seller-name">
-                {produto.vendedor.nome} <img src={check} alt="verificado" />
+                {produto.vendedor.nome} <img src={check} alt="verified" />
               </div>
               <div className="seller-rating">
                 <span className="stars">

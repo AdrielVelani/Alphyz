@@ -520,3 +520,178 @@ body {
 .foot-right {
   text-align: right;
 }
+/* ====== RESPONSIVO ====== */
+
+/* ====== TABLET ====== */
+@media (max-width: 1024px) {
+  .produto-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 20px 40px;
+  }
+
+  .left-side {
+    align-items: center;
+  }
+
+  .gallery {
+    flex-direction: row;
+    justify-content: center;
+    margin-left: 0;
+    gap: 15px;
+  }
+
+  .main-image-wrapper {
+    width: 320px;
+    height: 400px;
+  }
+
+  .purchase-card {
+    width: 320px;
+    height: auto;
+    margin-right: 0;
+  }
+
+  .carousel-item {
+    width: 200px;
+    height: 250px;
+  }
+
+  .carousel-item img {
+    height: 160px;
+  }
+}
+
+/* ====== CELULAR ====== */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 16px;
+    gap: 10px;
+  }
+
+  .header-search {
+    width: 100%;
+  }
+
+  .search-wrapper {
+    width: 100%;
+  }
+
+  .produto-container {
+    padding: 20px 16px;
+  }
+
+  .gallery {
+    flex-direction: row;
+    gap: 10px;
+    margin-left: 0;
+  }
+
+  .thumb {
+    width: 50px;
+    height: 50px;
+  }
+
+  .main-image-wrapper {
+    width: 100%;
+    max-width: 280px;
+    height: 360px;
+  }
+
+  .purchase-card {
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+    padding: 20px;
+  }
+
+  .details h2 {
+    font-size: 16px;
+  }
+
+  .desc {
+    font-size: 13px;
+  }
+
+  .carousel-item {
+    width: 160px;
+    height: 220px;
+  }
+
+  .carousel-item img {
+    height: 130px;
+  }
+
+  .seller-avatar,
+  .ann-avatar {
+    width: 35px;
+    height: 35px;
+  }
+
+  .seller-name img,
+  .ann-name img {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* ====== MÓVEL PEQUENO ====== */
+@media (max-width: 480px) {
+  .header {
+    padding: 8px 12px;
+  }
+
+  .search-input {
+    font-size: 0.85rem;
+    padding: 0 36px 0 12px;
+  }
+
+  .produto-container {
+    padding: 16px 12px;
+  }
+
+  .main-image-wrapper {
+    max-width: 100%;
+    height: 280px;
+  }
+
+  .thumb {
+    width: 40px;
+    height: 40px;
+  }
+
+  .purchase-card {
+    width: 100%;
+    padding: 16px;
+  }
+
+  .carousel-item {
+    width: 140px;
+    height: 200px;
+  }
+
+  .carousel-item img {
+    height: 110px;
+  }
+
+  .details h2 {
+    font-size: 15px;
+  }
+
+  .desc {
+    font-size: 12px;
+  }
+
+  .footer-grid {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .foot-right,
+  .foot-center {
+    text-align: left;
+  }
+}

@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from "react";
+// src/pages/produto/produto.js
+import React, { useEffect, useState } from "react";
+import SiteHeader from "../../components/SiteHeader"; // mesmo header do shopping/perfil
 import "./produto.css";
-import { FaShoppingCart, FaSlidersH, FaSearch } from "react-icons/fa";
-import logo from "../../assets/logo.png";
-import pergunta from "../../assets/pergunta.png";
-import chat from "../../assets/chat.png";
-import camisa1 from "../../assets/bermudarosa.jpeg";
-import camisa2 from "../../assets/blusacinza.jpeg";
-import camisa3 from "../../assets/blusarosa.jpeg";
-import camisa4 from "../../assets/vestidopreto.jpeg";
+
 import perfil from "../../assets/perfil.png";
 import check from "../../assets/check.png";
-import fita from "../../assets/fita.png";
 
-const userDefault = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+/* === IMAGENS CORRETAS (existentes na pasta assets) === */
+import img1 from "../../assets/bermudarosa.jpeg";
+import img2 from "../../assets/blusacinza.jpeg";
+import img3 from "../../assets/blusarosa.jpeg";
 
 export default function DetalhesProduto() {
   const produto = {
@@ -21,32 +18,27 @@ export default function DetalhesProduto() {
     tamanho: "M",
     cor: "Rosa",
     estado: "Novo",
+    vendedor: { nome: "RaquelSilva", avaliacao: 4 },
     descricao:
-      "Bermuda rosa super confortável para utilizar no dia a dia e para atividades físicas ",
-    imagens: [camisa1, camisa2, camisa3, camisa4],
-    vendedor: {
-      nome: "RaquelSilva",
-      foto: userDefault,
-      avaliacao: 4,
-    },
+      "Bermuda rosa super confortável para utilizar no dia a dia e para atividades físicas",
+    imagens: [img1, img2, img3],
   };
 
-  // Itens de recomendados e do mesmo vendedor
   const recomendados = [
-  { nome: "Bermuda Rosa", preco: 70, tamanho: "M", img: camisa1 },
-  { nome: "Regata Cinza", preco: 50, tamanho: "M", img: camisa2 },
-  { nome: "Top Rosa", preco: 150, tamanho: "M", img: camisa3 },
+    { nome: "Bermuda Rosa", preco: 70,  tamanho: "M", img: img1 },
+    { nome: "Regata Cinza",  preco: 50,  tamanho: "M", img: img2 },
+    { nome: "Top Rosa",      preco: 150, tamanho: "M", img: img3 },
   ];
 
   const maisDoVendedor = [
-  { nome: "Bermuda Rosa", preco: 90, tamanho: "M", img: camisa1 },
-  { nome: "Regata Cinza", preco: 120, tamanho: "M", img: camisa2 },
-  { nome: "Top Rosa", preco: 200, tamanho: "M", img: camisa3 },
-];
+    { nome: "Bermuda Rosa", preco: 90,  tamanho: "M", img: img1 },
+    { nome: "Regata Cinza", preco: 120, tamanho: "M", img: img2 },
+    { nome: "Top Rosa",     preco: 200, tamanho: "M", img: img3 },
+  ];
 
   const [mainImg, setMainImg] = useState(produto.imagens[0]);
 
-  // Zoom efeito
+  // Zoom simples
   useEffect(() => {
     const container = document.querySelector(".zoom-container");
     const image = container?.querySelector("img");
@@ -59,7 +51,6 @@ export default function DetalhesProduto() {
       image.style.transformOrigin = `${x}% ${y}%`;
       image.style.transform = "scale(2)";
     };
-
     const handleLeave = () => {
       image.style.transformOrigin = "center center";
       image.style.transform = "scale(1)";
@@ -67,53 +58,19 @@ export default function DetalhesProduto() {
 
     container.addEventListener("mousemove", handleMove);
     container.addEventListener("mouseleave", handleLeave);
-
     return () => {
       container.removeEventListener("mousemove", handleMove);
       container.removeEventListener("mouseleave", handleLeave);
     };
   }, [mainImg]);
 
-  const scrollLeft = (id) => {
-    const container = document.getElementById(id);
-    if (container) container.scrollBy({ left: -200, behavior: "smooth" });
-  };
-
-  const scrollRight = (id) => {
-    const container = document.getElementById(id);
-    if (container) container.scrollBy({ left: 200, behavior: "smooth" });
-  };
+  const scrollLeft  = (id) => { document.getElementById(id)?.scrollBy({ left: -200, behavior: "smooth" }); };
+  const scrollRight = (id) => { document.getElementById(id)?.scrollBy({ left:  200, behavior: "smooth" }); };
 
   return (
     <>
-      {/* HEADER */}
-      <header className="header">
-        <div className="header-logo">
-          <img src={logo} alt="Alphyz" />
-        </div>
-
-        <div className="header-search">
-          <FaSlidersH className="search-icon-left" />
-          <div className="search-wrapper">
-            <input
-              type="text"
-              placeholder="O que você está buscando?"
-              className="search-input"
-            />
-            <FaSearch className="search-icon-right" />
-          </div>
-        </div>
-
-        <div className="header-right">
-          <a href="#" className="header-link">
-            SOBRE NÓS
-          </a>
-          <img src={pergunta} className="header-icon" alt="ajuda" />
-          <img src={chat} className="header-icon" alt="chat" />
-          <FaShoppingCart className="header-icon" />
-          <img src={perfil} className="seller-avatar" />
-        </div>
-      </header>
+      {/* HEADER padronizado (logo → /shopping, perfil e sair condicionados ao token) */}
+      <SiteHeader />
 
       {/* CONTEÚDO */}
       <main className="produto-container">
@@ -133,11 +90,7 @@ export default function DetalhesProduto() {
             </div>
 
             <div className="main-image-wrapper zoom-container">
-              <img
-                src={mainImg}
-                alt="Imagem principal do produto"
-                className="main-image"
-              />
+              <img src={mainImg} alt="Imagem principal do produto" className="main-image" />
             </div>
           </section>
 
@@ -146,25 +99,15 @@ export default function DetalhesProduto() {
             <h2>Descrição:</h2>
             <p className="desc">{produto.descricao}</p>
             <ul className="specs">
-              <li>
-                <strong>Tamanho:</strong> {produto.tamanho}
-              </li>
-              <li>
-                <strong>Cor:</strong> {produto.cor}
-              </li>
-              <li>
-                <strong>Estado:</strong> {produto.estado}
-              </li>
+              <li><strong>Tamanho:</strong> {produto.tamanho}</li>
+              <li><strong>Cor:</strong> {produto.cor}</li>
+              <li><strong>Estado:</strong> {produto.estado}</li>
             </ul>
 
             <div className="announced-by">
               <h3>Anunciado por:</h3>
               <div className="announcer">
-                <img
-                  src={perfil}
-                  alt={produto.vendedor.nome}
-                  className="ann-avatar"
-                />
+                <img src={perfil} alt={produto.vendedor.nome} className="ann-avatar" />
                 <div>
                   <div className="ann-name">
                     {produto.vendedor.nome} <img src={check} alt="verificado" />
@@ -182,19 +125,10 @@ export default function DetalhesProduto() {
           <section className="carousel-section">
             <h2>Recomendados</h2>
             <div className="carousel-wrapper">
-              <button
-                className="arrow left"
-                onClick={() => scrollLeft("recomendados")}
-              >
-                ‹
-              </button>
+              <button className="arrow left" onClick={() => scrollLeft("recomendados")}>‹</button>
               <div className="carousel" id="recomendados">
                 {recomendados.map((item, i) => (
-                  <div
-                    key={i}
-                    className="carousel-item"
-                    onClick={() => setMainImg(item.img)}
-                  >
+                  <div key={i} className="carousel-item" onClick={() => setMainImg(item.img)}>
                     <img src={item.img} alt={item.nome} />
                     <div className="nome">{item.nome}</div>
                     <div className="preco">KLV$ {item.preco}</div>
@@ -202,12 +136,7 @@ export default function DetalhesProduto() {
                   </div>
                 ))}
               </div>
-              <button
-                className="arrow right"
-                onClick={() => scrollRight("recomendados")}
-              >
-                ›
-              </button>
+              <button className="arrow right" onClick={() => scrollRight("recomendados")}>›</button>
             </div>
           </section>
 
@@ -215,19 +144,10 @@ export default function DetalhesProduto() {
           <section className="carousel-section">
             <h2>Mais deste vendedor</h2>
             <div className="carousel-wrapper">
-              <button
-                className="arrow left"
-                onClick={() => scrollLeft("maisDoVendedor")}
-              >
-                ‹
-              </button>
+              <button className="arrow left" onClick={() => scrollLeft("maisDoVendedor")}>‹</button>
               <div className="carousel" id="maisDoVendedor">
                 {maisDoVendedor.map((item, i) => (
-                  <div
-                    key={i}
-                    className="carousel-item"
-                    onClick={() => setMainImg(item.img)}
-                  >
+                  <div key={i} className="carousel-item" onClick={() => setMainImg(item.img)}>
                     <img src={item.img} alt={item.nome} />
                     <div className="nome">{item.nome}</div>
                     <div className="preco">KLV$ {item.preco}</div>
@@ -235,12 +155,7 @@ export default function DetalhesProduto() {
                   </div>
                 ))}
               </div>
-              <button
-                className="arrow right"
-                onClick={() => scrollRight("maisDoVendedor")}
-              >
-                ›
-              </button>
+              <button className="arrow right" onClick={() => scrollRight("maisDoVendedor")}>›</button>
             </div>
           </section>
         </div>
@@ -251,12 +166,8 @@ export default function DetalhesProduto() {
           <p className="price">KLV$ {produto.preco}</p>
 
           <div className="meta">
-            <div>
-              <strong>Tamanho:</strong> {produto.tamanho}
-            </div>
-            <div>
-              <strong>Cor:</strong> {produto.cor}
-            </div>
+            <div><strong>Tamanho:</strong> {produto.tamanho}</div>
+            <div><strong>Cor:</strong> {produto.cor}</div>
           </div>
 
           <div className="actions">
@@ -265,20 +176,14 @@ export default function DetalhesProduto() {
           </div>
 
           <div className="seller">
-            <img
-              src={perfil}
-              alt={produto.vendedor.nome}
-              className="seller-avatar"
-            />
+            <img src={perfil} alt={produto.vendedor.nome} className="seller-avatar" />
             <div className="seller-info">
               <div className="seller-name">
                 {produto.vendedor.nome} <img src={check} alt="verified" />
               </div>
               <div className="seller-rating">
-                <span className="stars">
-                  {"★".repeat(produto.vendedor.avaliacao)}
-                  {"☆".repeat(5 - produto.vendedor.avaliacao)}
-                </span>
+                {"★".repeat(produto.vendedor.avaliacao)}
+                {"☆".repeat(5 - produto.vendedor.avaliacao)}
               </div>
             </div>
           </div>
@@ -289,30 +194,16 @@ export default function DetalhesProduto() {
       <footer className="footer">
         <div className="footer-grid">
           <div className="foot-col">
-            <a href="#" className="foot-link">
-              Termos de uso
-            </a>
-            <a href="#" className="foot-link">
-              Política de privacidade
-            </a>
+            <a href="#" className="foot-link">Termos de uso</a>
+            <a href="#" className="foot-link">Política de privacidade</a>
           </div>
-
           <div className="foot-col foot-center">
-            <span className="foot-muted">
-              Precisa entrar em contato conosco?
-            </span>
-            <a href="mailto:jjfloresmkt@gmail.com" className="foot-link">
-              Email: jjfloresmkt@gmail.com
-            </a>
+            <span className="foot-muted">Precisa entrar em contato conosco?</span>
+            <a href="mailto:jjfloresmkt@gmail.com" className="foot-link">Email: jjfloresmkt@gmail.com</a>
           </div>
-
           <div className="foot-col foot-right">
-            <a href="#" className="foot-link">
-              FAQ
-            </a>
-            <a href="#" className="foot-link">
-              Ajuda
-            </a>
+            <a href="#" className="foot-link">FAQ</a>
+            <a href="#" className="foot-link">Ajuda</a>
           </div>
         </div>
       </footer>

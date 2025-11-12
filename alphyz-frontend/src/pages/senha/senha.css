@@ -1,0 +1,127 @@
+/* ====== GERAL ====== */
+body {
+  height: 100%;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ====== CONTAINER CENTRAL ====== */
+.recuperacao-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* ocupa toda a tela */
+}
+
+/* ====== CARD ====== */
+.card {
+  background-color: #fff;
+  width: 400px;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+/* ====== TÍTULO E TEXTO ====== */
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+
+.lead {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* ====== FORM ====== */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+label {
+  text-align: left;
+  font-weight: 500;
+  color: #444;
+}
+
+input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-color: #6a0dad;
+}
+
+/* ====== BOTÕES ====== */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.btn {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  border: none;
+}
+
+.btn.primary {
+  background-color: #6a0dad;
+  color: white;
+}
+
+.btn.primary:hover {
+  background-color: #580c9b;
+}
+
+.btn.ghost {
+  background-color: transparent;
+  border: 2px solid #6a0dad;
+  color: #6a0dad;
+}
+
+.btn.ghost:hover {
+  background-color: #6a0dad;
+  color: #fff;
+}
+
+/* ====== TEXTO INFORMATIVO ====== */
+.hint {
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 1rem;
+}
+
+.footer-text {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.footer-text a {
+  color: #6a0dad;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-text a:hover {
+  text-decoration: underline;
+}

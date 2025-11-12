@@ -98,7 +98,7 @@ export default function LoginPage() {
 
           <div className="form-footer">
             <div className="links">
-              <a href="#" onClick={(e) => e.preventDefault()}>Esqueci a senha</a>
+               <Link to="/senha">Esqueci a senha</Link>
               <Link to="/cadastro">Cadastre-se</Link>
             </div>
 

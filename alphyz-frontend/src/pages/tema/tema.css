@@ -1,0 +1,160 @@
+/* === SUPORTE A TEMA CLARO/ESCURO === */
+
+/* Tema Claro (padrão) */
+:root {
+  --bg-color: #fafafa;
+  --text-color: #333333;
+  --accent-color: #691e74;
+  --menu-bg: #ffffff;
+  --menu-border: #e0e0e0;
+  --menu-text: #333333;
+  --divider-color: #e0e0e0;
+  --form-bg: #ffffff;
+  --form-border: #cccccc;
+}
+
+/* Tema Escuro */
+[data-theme="escuro"] {
+  --bg-color: #121212;
+  --text-color: #f5f5f5;
+  --accent-color: #bb67c5;
+  --menu-bg: #1e1e1e;
+  --menu-border: #2c2c2c;
+  --menu-text: #e0e0e0;
+  --divider-color: #333333;
+  --form-bg: #1a1a1a;
+  --form-border: #444444;
+}
+
+/* Corpo da página */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Botões */
+button {
+  background: var(--accent-color);
+  color: var(--bg-color);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* === Estrutura principal === */
+.tema-container {
+  display: flex;
+  height: 100vh;
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* === Menu lateral === */
+.menu-lateral {
+  width: 320px;
+  padding: 40px 0;
+  border-right: 1px solid var(--menu-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--menu-bg);
+}
+
+.logo {
+  width: 130px;
+  margin-bottom: 50px;
+}
+
+/* Lista de opções */
+.menu-lateral ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+
+.menu-lateral li {
+  text-align: center;
+  padding: 16px 0;
+  font-size: 15px;
+  cursor: pointer;
+  color: var(--menu-text);
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+/* Linha abaixo de cada item */
+.menu-lateral li::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  width: 50%;
+  height: 1px;
+  background-color: var(--divider-color);
+}
+
+/* Cor de destaque quando ativo */
+.menu-lateral li.ativo {
+  color: var(--accent-color);
+}
+
+.menu-lateral li.ativo::after {
+  background-color: var(--accent-color);
+}
+
+/* Hover */
+.menu-lateral li:hover {
+  color: var(--accent-color);
+}
+
+/* === Área principal === */
+.conteudo-tema {
+  flex: 1;
+  padding: 80px 100px;
+  background-color: var(--bg-color);
+}
+
+.conteudo-tema h2 {
+  color: var(--accent-color);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 40px;
+}
+
+/* === Formulário === */
+.form-tema {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-tema label {
+  font-size: 13px;
+  color: var(--text-color);
+}
+
+.form-tema select {
+  width: 300px;
+  padding: 8px 12px;
+  border: 1px solid var(--form-border);
+  border-radius: 4px;
+  background: var(--form-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 14px;
+  transition: border 0.3s;
+}
+
+.form-tema select:hover {
+  border-color: var(--accent-color);
+}

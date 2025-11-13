@@ -28,7 +28,9 @@ public class Usuario {
     private String email;
     @Indexed(unique=true)
     private String cpf;
-
+    
+    private String resetToken;
+    private Long tokenExpiration;
 
     public String getId() {
         return id;
@@ -128,7 +130,20 @@ public class Usuario {
     public void setReviews(List<String> reviews) {
         this.reviews = reviews;
     }
+    public String getResetToken() {
+    return resetToken;
+    }
 
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+   }
 
+    public Long getTokenExpiration() {
+        return tokenExpiration;
+    }
+
+    public void setTokenExpiration(Long tokenExpiration) {
+         this.tokenExpiration = tokenExpiration;
+    }
 
 }

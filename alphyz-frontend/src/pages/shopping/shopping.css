@@ -1,6 +1,8 @@
+
 /* =======================
    Reset / Base
 ======================= */
+
 * { margin: 0; box-sizing: border-box; }
 body { overflow-x: hidden; font-family: "Poppins", sans-serif; color:#222; }
 
@@ -221,4 +223,3 @@ body { overflow-x: hidden; font-family: "Poppins", sans-serif; color:#222; }
 /* garante tamanho e cor do ícone do usuário, sem afetar outros ícones */
 .header-icon.user { color: #000 !important; }
 .header-icon.user svg { width: 22px; height: 22px; display: block; }
-

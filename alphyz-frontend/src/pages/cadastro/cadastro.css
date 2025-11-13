@@ -1,3 +1,5 @@
+
+
 body{
   background:#ffffff;
   margin:0;
@@ -90,13 +92,22 @@ input:focus, select:focus{
 }
 
 /* Checkboxes em linha com texto pequeno */
-.checkbox{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin:10px 0 0;
-  font-size:13px;
-  color:#555;
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* espaço entre o checkbox e o texto */
+  margin-bottom: 12px; /* espaço entre cada linha */
+}
+
+.checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.checkbox span {
+  font-size: 16px;
+  line-height: 1.3;
 }
 
 /* Botão amplo como no protótipo */
@@ -133,4 +144,24 @@ input:focus, select:focus{
   .cadastro-form{ grid-template-columns: 1fr; column-gap: 0; }
   .btn-enviar{ width:100%; }
   .voltar-login{ text-align:center; }
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  display: block;
+  margin-top: -2px;
+}
+.sucesso {
+  width: 320px;        /* mesma largura do botão */
+  margin-top: 12px;    /* espaço entre o botão e a mensagem */
+  padding: 12px;
+  background: #d4f8d8;
+  border: 1px solid #6adf7e;
+  color: #0f8a1f;
+  border-radius: 10px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }

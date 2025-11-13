@@ -9,6 +9,7 @@ import java.util.List;
 public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     List<Usuario> findByNome(String nome);
     List<Usuario> findByEmail(String email);
+    List<Usuario> findByResetToken(String resetToken);
     Boolean existsByEmail(String email);
     Boolean existsByCpf(String cpf);
 }

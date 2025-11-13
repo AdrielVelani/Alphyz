@@ -21,13 +21,17 @@ public class SecurityConfig {
                     "/autenticar/**",
                     "/usuarios/**",
                     "/roupas/**",
+                    "/recuperar/**",   // 🔓 Libera as rotas de recuperação
+                    "/login/**",
+                    "/cadastro/**",
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     "/public/**"
                 ).permitAll()
-                .anyRequest().permitAll() // Desenvolvimento: libera tudo
+                .anyRequest().permitAll() // (por enquanto deixa tudo aberto)
             );
+
         return http.build();
     }
 }

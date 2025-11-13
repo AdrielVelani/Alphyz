@@ -9,6 +9,8 @@ import Home       from "./pages/home/home";       // ajuste o caminho se for dif
 import Cadastro   from "./pages/cadastro/cadastro"; // se não existir, crie um stub simples
 import Produto   from "./pages/produto/produto";
 import Senha from "./pages/senha/senha";
+import AlterarSenha from "./pages/senha/alterarSenha";
+import Tema from "./pages/tema/tema";
 
 const isAuth = () => {
   try { const t = localStorage.getItem("token"); return !!t && t !== "null" && t !== "undefined"; }
@@ -26,6 +28,8 @@ export default function App() {
       <Route path="/cadastro" element={<Cadastro />} />
       <Route path="/produto" element={<Produto />} />
       <Route path="/senha" element={<Senha />} />
+      <Route path="/redefinir-senha/:token" element={<AlterarSenha />} />
+      <Route path="/tema" element={<Tema />} />
 
 
       <Route path="/perfil" element={<Protected><Perfil /></Protected>} />

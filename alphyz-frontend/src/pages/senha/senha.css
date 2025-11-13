@@ -192,3 +192,14 @@ input:focus {
   from { transform: translateY(25px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+.erro-texto, .error {
+  color: #ff3b3b;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.sucesso-texto, .success {
+  color: #22bb33;
+  font-size: 14px;
+  margin-top: 4px;
+}

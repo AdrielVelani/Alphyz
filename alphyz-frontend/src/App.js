@@ -13,6 +13,8 @@ import AlterarSenha from "./pages/senha/alterarSenha";
 import Tema from "./pages/tema/tema";
 import Painel from "./pages/administrador/painelAdm";
 import Denuncias from "./pages/administrador/denuncias/denuncia";
+import PerfilAdm from "./pages/administrador/perfilAdm/perfilAdm";
+import Curadoria from "./pages/administrador/curadoria/curadoria";
 
 const isAuth = () => {
   try { const t = localStorage.getItem("token"); return !!t && t !== "null" && t !== "undefined"; }
@@ -34,6 +36,8 @@ export default function App() {
       <Route path="/tema" element={<Tema />} />
       <Route path="/paineladm" element={<Painel />} />
       <Route path="/denuncias" element={<Denuncias />} />
+      <Route path="/perfiladm" element={<PerfilAdm />} />
+      <Route path="/curadoria" element={<Curadoria />} />
 
       <Route path="/perfil" element={<Protected><Perfil /></Protected>} />
       <Route path="/perfil/:id" element={<Perfil />} />

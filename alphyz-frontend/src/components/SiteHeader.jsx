@@ -34,10 +34,10 @@ export default function SiteHeader() {
 
       {/* Busca central (mantido igual ao shopping/perfil) */}
       <div className="header-search">
-        <FaSlidersH className="search-icon-left" />
+        <FaSlidersH className="search-icon-left" aria-label="Filtros de busca" />
         <div className="search-wrapper">
           <input type="text" placeholder="O que você está buscando?" className="search-input" />
-          <FaSearch className="search-icon-right" />
+          <FaSearch className="search-icon-right" aria-label="Pesquisar" />
         </div>
       </div>
 
@@ -46,7 +46,7 @@ export default function SiteHeader() {
         <a href="/home" className="header-link">SOBRE NÓS</a>
         <img src={pergunta} className="header-icon" alt="ajuda" />
         <img src={chat} className="header-icon" alt="chat" />
-        <FaShoppingCart className="header-icon" />
+        <FaShoppingCart className="header-icon" aria-label="Carrinho de compras" />
 
         {isAuth ? (
           <>
@@ -57,7 +57,7 @@ export default function SiteHeader() {
               aria-label="Meu perfil"
               style={{ color: "#000" }}
             >
-              <FaUserCircle />
+              <FaUserCircle aria-label="Ícone de Perfil" />
             </a>
             <button type="button" className="header-login" onClick={logout}>
               SAIR

@@ -334,12 +334,12 @@ export default function Perfil() {
               <h1>{perfil.nome}</h1>
               <div className="perfil-rating">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <FaStar key={i} className={i < (perfil.rating || 0) ? "star on" : "star"} />
+                  <FaStar key={i} className={i < (perfil.rating || 0) ? "star on" : "star"} aria-label={`Estrela de avaliação ${i + 1} de 5`} />
                 ))}
                 <span className="perfil-reviews">{perfil.reviews} Avaliações</span>
               </div>
               <div className="perfil-loc">
-                <FaMapMarkerAlt /> {perfil.cidade} - {perfil.estado}
+                <FaMapMarkerAlt aria-label="Localização" /> {perfil.cidade} - {perfil.estado}
               </div>
               {perfil.bio && <p className="perfil-bio">{perfil.bio}</p>}
             </div>
@@ -352,7 +352,7 @@ export default function Perfil() {
                   aria-label="Editar perfil"
                   onClick={() => setOpenEdit(true)}
                 >
-                  <FaEdit />
+                  <FaEdit aria-label="Editar perfil" />
                 </button>
               ) : (
                 <div className="perfil-menu-area">
@@ -440,7 +440,7 @@ export default function Perfil() {
                   <div className="review-user">{r.autor}</div>
                   <div className="review-stars">
                     {Array.from({ length: 5 }).map((_, k) => (
-                      <FaStar key={k} className={k < r.stars ? "star on" : "star"} />
+                      <FaStar key={k} className={k < r.stars ? "star on" : "star"} aria-label={`Estrela de avaliação ${k + 1} de 5`} />
                     ))}
                   </div>
                 </div>

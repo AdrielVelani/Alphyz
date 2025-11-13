@@ -1,0 +1,116 @@
+/* Estilos para Perfil do Administrador */
+.perfilAdm-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: var(--bg-color, #ffffff);
+    color: var(--text-color, #333333);
+}
+
+.perfilAdm-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 30px;
+}
+
+.perfilAdm-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-color, #333333);
+}
+
+.perfilAdm-header-icons {
+    display: flex;
+    gap: 20px;
+    font-size: 24px;
+    color: var(--text-color, #333333);
+}
+
+.perfilAdm-header-icons .icon {
+    cursor: pointer;
+}
+
+.perfilAdm-content {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding: 20px 0;
+}
+
+.perfilAdm-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #e0e0e0; /* Cor de fundo para o círculo cinza */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 70px;
+    color: #ffffff;
+}
+
+.perfilAdm-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.perfilAdm-info h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-color, #333333);
+    margin: 0;
+}
+
+.perfilAdm-info p {
+    font-size: 16px;
+    color: #888888;
+    font-style: italic;
+    margin: 0;
+}
+
+.perfilAdm-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.perfilAdm-btn-user {
+    background-color: #2ecc71; /* Verde do protótipo */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.perfilAdm-btn-user:hover {
+    background-color: #27ae60;
+}
+
+.perfilAdm-icon-settings {
+    font-size: 30px;
+    color: var(--accent-color, #892997); /* Roxo do protótipo */
+    cursor: pointer;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .perfilAdm-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .perfilAdm-actions {
+        margin-left: 0;
+        margin-top: 20px;
+        width: 100%;
+        justify-content: space-between;
+    }
+}

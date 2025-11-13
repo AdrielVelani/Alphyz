@@ -1,46 +1,34 @@
 import React, { useState, useEffect } from "react";
-import "./tema.css";
+import "./painelAdm.css";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 
+export default function Painel() {
 
-export default function TemaPreferencia() {
-  const [tema, setTema] = useState(localStorage.getItem("tema") || "claro");
 
-  // Aplica o tema e salva no localStorage
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", tema);
-    localStorage.setItem("tema", tema);
-  }, [tema]);
 
   return (
       <>
-    <div className="tema-container">
+    <div className="container">
       <aside className="menu-lateral">
         <img src={logo} alt="Logo Alphyz" className="logo" />
         <ul>
           <li>Conta</li>
           <li>Segurança</li>
-          <li><Link to = "/paineladm">Painel de Administrador </Link></li>
-          <li className="ativo">Temas</li>
+          <li className="ativo">Painel de Administrador</li>
+          <li><Link to = "/tema">Temas</Link></li>
           <li>Política de Privacidade</li>
           <li>Termos de Uso</li>
         </ul>
       </aside>
 
-      <main className="conteudo-tema">
-        <h2>TEMAS</h2>
-        <div className="form-tema">
-          <label htmlFor="tema-select">Qual sua preferência de tema?</label>
-          <select
-            id="tema-select"
-            value={tema}
-            onChange={(e) => setTema(e.target.value)}
-          >
-            <option value="claro">Claro </option>
-            <option value="escuro">Escuro </option>
-          </select>
-        </div>
+      <main className="conteudo">
+        <h2>Painel de Administrador</h2>
+        <p>Ao clicar no botão abaixo você sairá do Modo Usuário e irá para o Modo Administrador</p>
+          <button className="btn-admin" >
+        Ir para Painel de Administrador
+        </button>
+        
       </main>
     </div>
 

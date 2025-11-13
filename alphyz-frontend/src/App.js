@@ -11,6 +11,8 @@ import Produto   from "./pages/produto/produto";
 import Senha from "./pages/senha/senha";
 import AlterarSenha from "./pages/senha/alterarSenha";
 import Tema from "./pages/tema/tema";
+import Painel from "./pages/administrador/painelAdm";
+import Denuncias from "./pages/administrador/denuncias/denuncia";
 
 const isAuth = () => {
   try { const t = localStorage.getItem("token"); return !!t && t !== "null" && t !== "undefined"; }
@@ -30,7 +32,8 @@ export default function App() {
       <Route path="/senha" element={<Senha />} />
       <Route path="/redefinir-senha/:token" element={<AlterarSenha />} />
       <Route path="/tema" element={<Tema />} />
-
+      <Route path="/paineladm" element={<Painel />} />
+      <Route path="/denuncias" element={<Denuncias />} />
 
       <Route path="/perfil" element={<Protected><Perfil /></Protected>} />
       <Route path="/perfil/:id" element={<Perfil />} />

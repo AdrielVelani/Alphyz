@@ -1,8 +1,7 @@
-/* Tema Claro (padrão) */
 :root {
   --bg-color: #ffffff;
   --text-color: #333333;
-  --accent-color: #b72dcc;
+  --accent-color: #892997;
   --menu-bg: #ffffff;
   --menu-border: #e0e0e0;
   --menu-text: #333333;
@@ -32,9 +31,14 @@ button {
 button:hover {
   opacity: 0.9;
 }
+btn-admin{
+    color: #ffffff;
+    background-color: var(--accent-color);
+    padding-top: 20px;
 
+}
 /* === Estrutura principal === */
-.tema-container {
+.container {
   display: flex;
   height: 100vh;
   font-family: "Inter", sans-serif;
@@ -52,7 +56,7 @@ button:hover {
   flex-direction: column;
   align-items: center;
   background-color: var(--menu-bg);
-  text-decoration: none
+  text-decoration: none;
 }
 
 .logo {
@@ -77,6 +81,7 @@ button:hover {
   color: var(--menu-text);
   position: relative;
   transition: color 0.3s ease;
+  text-decoration: none;
 }
 
 /* Linha abaixo de cada item */
@@ -88,7 +93,6 @@ button:hover {
   width: 50%;
   height: 1px;
   background-color: var(--divider-color);
-  
 }
 
 /* Cor de destaque quando ativo */
@@ -106,47 +110,36 @@ button:hover {
 }
 
 /* === Área principal === */
-.conteudo-tema {
+.conteudo {
   flex: 1;
   padding: 80px 100px;
   background-color: var(--bg-color);
 }
 
-.conteudo-tema h2 {
+.conteudo h2 {
   color: var(--accent-color);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.5px;
   margin-bottom: 40px;
 }
-
+.conteudo p{
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #333333bd;
+}
 /* === Formulário === */
-.form-tema {
+.form {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.form-tema label {
+.form label {
   font-size: 13px;
   color: var(--text-color);
 }
 
-.form-tema select {
-  width: 300px;
-  padding: 8px 12px;
-  border: 1px solid var(--form-border);
-  border-radius: 4px;
-  background: var(--form-bg);
-  color: var(--text-color);
-  cursor: pointer;
-  font-size: 14px;
-  transition: border 0.3s;
-}
-
-.form-tema select:hover {
-  border-color: var(--accent-color);
-}
 /* =======================
    Footer
 ======================= */

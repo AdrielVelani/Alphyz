@@ -1,0 +1,233 @@
+/* =======================
+   Estrutura geral
+======================= */
+.painelDenuncias-wrapper {
+  font-family: "Poppins", sans-serif;
+  color: #222;
+  background: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+h2{
+  font-size: 15px;
+  margin-left: 55px;
+}
+.painelDenuncias-topo {
+  background: #f2f2f2;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+.painelDenuncias-icones span {
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+/* =======================
+   Layout principal
+======================= */
+.painelDenuncias-principal {
+  display: flex;
+  flex: 1;
+  padding: 20px;
+  margin-left: 55px;
+}
+
+.painelDenuncias-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-right: 40px;
+}
+
+.painelDenuncias-btnPri {
+  background: #2ecc71;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.painelDenuncias-btnSec {
+  background: #eee;
+  border: 1px solid #ccc;
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* =======================
+   Corpo da página
+======================= */
+.painelDenuncias-corpo {
+  flex: 1;
+  
+}
+h1{
+  margin: 50px 300px 50px 50px;
+}
+.painelDenuncias-corpo h1 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.painelDenuncias-contador {
+  text-align: right;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  margin-top: -50px;
+}
+
+/* =======================
+   Filtros
+======================= */
+.painelDenuncias-filtros {
+  width: 100vh;
+  background: #f8f5f5;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  padding-left: 20vh;
+  margin-left: 35vh ;
+  margin-top: 50px;
+}
+
+.painelDenuncias-filtros label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  width: 30vh;
+}
+
+.painelDenuncias-filtros select {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* =======================
+   Tabela
+======================= */
+.painelDenuncias-tabela table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-left: -8vh;
+}
+
+.painelDenuncias-tabela th {
+  background: #2ecc71;
+  color: white;
+  padding: 10px;
+  text-align: left;
+}
+
+.painelDenuncias-tabela td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.painelDenuncias-tabela tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+/* =======================
+   Status
+======================= */
+.painelDenuncias-status.painelDenuncias-pendente {
+  color: #e74c3c;
+  font-weight: bold;
+}
+.painelDenuncias-status.painelDenuncias-analise {
+  color: #f39c12;
+  font-weight: bold;
+}
+.painelDenuncias-status.painelDenuncias-resolvido {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+/* =======================
+   Botões
+======================= */
+.painelDenuncias-btnRevisar {
+  background: #f1c40f;
+  border: none;
+  color: #000;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.painelDenuncias-btnArquivar {
+  background: #9b59b6;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 5px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.painelDenuncias-btnExcluir {
+  background: #e74c3c;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* =======================
+   Responsividade
+======================= */
+@media (max-width: 800px) {
+  .painelDenuncias-principal {
+    flex-direction: column;
+  }
+
+  .painelDenuncias-menu {
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .painelDenuncias-tabela table,
+  .painelDenuncias-tabela thead,
+  .painelDenuncias-tabela tbody,
+  .painelDenuncias-tabela th,
+  .painelDenuncias-tabela td,
+  .painelDenuncias-tabela tr {
+    display: block;
+  }
+
+  .painelDenuncias-tabela tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  .painelDenuncias-tabela td {
+    border: none;
+    padding: 6px 0;
+  }
+
+  .painelDenuncias-tabela th {
+    display: none;
+  }
+
+  .painelDenuncias-status {
+    display: inline-block;
+    margin-top: 5px;
+  }
+}

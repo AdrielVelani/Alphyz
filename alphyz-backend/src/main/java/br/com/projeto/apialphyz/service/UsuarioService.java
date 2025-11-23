@@ -2,59 +2,93 @@ package br.com.projeto.apialphyz.service;
 
 import br.com.projeto.apialphyz.dto.CadastroUsuarioDTO;
 import br.com.projeto.apialphyz.dto.ReviewDTO;
+import br.com.projeto.apialphyz.model.Produto;
 import br.com.projeto.apialphyz.model.Usuario;
+import br.com.projeto.apialphyz.repository.ProdutoRepository;
 import br.com.projeto.apialphyz.repository.UsuarioRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 public class UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private ProdutoRepository produtoRepository;
 
-    // Construtor para injeção de dependências
-    // pesquisar mais padrões de projeto
-    public UsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    }
+    /**
+     * Cadastrar novo usuário
+     */
+    public Usuario cadastrarNovoUsuario(CadastroUsuarioDTO dto) {
 
-    public Usuario cadastrarNovoUsuario(CadastroUsuarioDTO cadastroUsuarioDTO) {
-
-        // Verifica se o email ou CPF já estão no sistema
-        if (usuarioRepository.existsByEmail(cadastroUsuarioDTO.getEmail())) {
-            throw new RuntimeException("Esse email já está cadastrado.");
-        } else if (usuarioRepository.existsByCpf(cadastroUsuarioDTO.getCpf())) {
-            throw new RuntimeException("Esse CPF já está cadastrado.");
+        // Verifica se o email já existe
+        List<Usuario> lista = usuarioRepository.findByEmail(dto.getEmail());
+        if (!lista.isEmpty()) {
+            throw new RuntimeException("E-mail já está em uso");
         }
 
+        Usuario u = new Usuario();
+        u.setNome(dto.getNome());
+        u.setEmail(dto.getEmail());
+        u.setSenha(dto.getSenha());
+        u.setCpf(dto.getCpf());
+        u.setTelefone(dto.getTelefone());
+        u.setRua(dto.getRua());
+        u.setNumero(dto.getNumero());
+        u.setComplemento(dto.getComplemento());
+        u.setCep(dto.getCep());
+        u.setEstado(dto.getEstado());
+        u.setCidade(dto.getCidade());
+        u.setReviews(new ArrayList<>());
 
-
-        Usuario novoUsuario = new Usuario();
-        novoUsuario.setNome(cadastroUsuarioDTO.getNome());
-        novoUsuario.setEmail(cadastroUsuarioDTO.getEmail());
-        novoUsuario.setCpf(cadastroUsuarioDTO.getCpf());
-        novoUsuario.setTelefone(cadastroUsuarioDTO.getTelefone());
-        novoUsuario.setSenha(cadastroUsuarioDTO.getSenha());
-        novoUsuario.setCep(cadastroUsuarioDTO.getCep());
-        novoUsuario.setCidade(cadastroUsuarioDTO.getCidade());
-        novoUsuario.setEstado(cadastroUsuarioDTO.getEstado());
-        novoUsuario.setRua(cadastroUsuarioDTO.getRua());
-        novoUsuario.setComplemento(cadastroUsuarioDTO.getComplemento());
-        novoUsuario.setNumero(cadastroUsuarioDTO.getNumero());
-
-        //Parte a ser atualizada - Criptografia de Senha
-        // ideia: Usar JWT
-
-       // String senhaCriptografada = passwordEncoder.encode(registroDTO.getSenha());
-       // novoUsuario.setSenha(senhaCriptografada);
-
-        // novoUsuario.setRoles(Set.of(roleRepository.findByName("ROLE_USER")));
-
-        return usuarioRepository.save(novoUsuario);
+        return usuarioRepository.save(u);
     }
 
+    /**
+     * Lista produtos do usuário
+     */
+    public Optional<Map<String, Object>> listarProdutosDoUsuario(String id) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (usuarioOpt.isEmpty()) return Optional.empty();
 
+        Usuario usuario = usuarioOpt.get();
+
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("id", usuario.getId());
+        resposta.put("nome", usuario.getNome());
+
+        // CORREÇÃO: método correto para buscar produtos
+        List<Produto> produtos = produtoRepository.findByUsuarioId(usuario.getId());
+        resposta.put("produtos", produtos);
+
+        return Optional.of(resposta);
+    }
+
+    /**
+     * Adiciona um review ao usuário
+     */
     public void addReview(String id, ReviewDTO review) {
+        Usuario usuario = usuarioRepository
+                .findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado com id: " + id));
+
+        try {
+            String reviewJson = mapper.writeValueAsString(review);
+            if (usuario.getReviews() == null) {
+                usuario.setReviews(new ArrayList<>());
+            }
+            usuario.getReviews().add(reviewJson);
+            usuarioRepository.save(usuario);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Erro ao serializar review", e);
+        }
     }
 }

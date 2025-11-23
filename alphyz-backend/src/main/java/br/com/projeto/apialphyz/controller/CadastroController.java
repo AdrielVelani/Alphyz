@@ -27,36 +27,46 @@ public class CadastroController {
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<?> cadastrarUsuario(@RequestBody CadastroUsuarioDTO cadastroUsuarioDTO) {
+    public ResponseEntity<?> cadastrarUsuario(@RequestBody CadastroUsuarioDTO dto) {
         try {
-            Usuario novoUsuario = usuarioService.cadastrarNovoUsuario(cadastroUsuarioDTO);
+            Usuario novoUsuario = usuarioService.cadastrarNovoUsuario(dto);
+
             Map<String, Object> resp = new HashMap<>();
             resp.put("message", "Usuário registrado com sucesso!");
             resp.put("id", novoUsuario.getId());
             resp.put("email", novoUsuario.getEmail());
+
             return ResponseEntity.status(HttpStatus.CREATED).body(resp);
+
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
         }
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO login) {
+
         List<Usuario> lista = usuarioRepository.findByEmail(login.getEmail());
-        if (lista == null || lista.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Credenciais inválidas"));
+        if (lista.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Credenciais inválidas"));
         }
+
         Usuario u = lista.get(0);
-        // Senha salva como texto simples (sem criptografia neste projeto)
-        if (u.getSenha() == null || !u.getSenha().equals(login.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Credenciais inválidas"));
+
+        if (!u.getSenha().equals(login.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Credenciais inválidas"));
         }
+
         Map<String, Object> resp = new HashMap<>();
         resp.put("message", "OK");
         resp.put("userId", u.getId());
         resp.put("nome", u.getNome());
-        // Token placeholder para desenvolvimento
-        resp.put("token", "dev-token");
+        resp.put("token", "dev-token"); // token fake só para dev
+
         return ResponseEntity.ok(resp);
     }
 }
+    

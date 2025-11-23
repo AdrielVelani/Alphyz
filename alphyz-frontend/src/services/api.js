@@ -1,115 +1,200 @@
-export const API_BASE = (process.env.REACT_APP_API_URL || 'http://localhost:8080').replace(/\/$/, '');
+// Cleaned & organized API helper module
+// Notes:
+// - Preserved original logic but improved formatting, safety, naming, and consistency.
+// - Removed all “posts” logic → now everything usa “produtos”.
+
+export const API_BASE = (process.env.REACT_APP_API_URL || 'http://localhost:8080')
+  .replace(/\/$/, '');
 
 if (typeof window !== 'undefined' && !window.__API_BASE_LOGGED__) {
   window.__API_BASE_LOGGED__ = true;
-  // eslint-disable-next-line no-console
   console.log('[alphyz] API_BASE =', API_BASE);
 }
 
-function parseJSONSafe(t){try{return t?JSON.parse(t):{}}catch{return{}}}
-async function request(path,{method='GET',body,headers={},auth=false}={}){
-  const init={method,headers:{'Accept':'application/json',...(body?{'Content-Type':'application/json'}:{}),...headers}};
-  if(auth){const token=getToken(); if (token) init.headers['Authorization']=`Bearer ${token}`;}
-  if(body) init.body=JSON.stringify(body);
-  const url=`${API_BASE}${path}`;
-  const res=await fetch(url,init);
-  const text=await res.text(); const data=parseJSONSafe(text);
-  if(!res.ok){const err=new Error(data.message||`HTTP ${res.status}`); err.status=res.status; err.data=data; err.requestUrl=url; throw err;}
-  return data;
+// ===== Utilities =====
+const TOKEN_KEY = 'alphyz.token';
+const USER_KEY = 'alphyz.user';
+const USER_ID_KEY = 'alphyz.userId';
+const LEGACY_TOKEN = 'token';
+const LEGACY_USER = 'user';
+const LEGACY_USER_ID = 'userId';
+
+function parseJSONSafe(text) {
+  try { return text ? JSON.parse(text) : {}; }
+  catch { return {}; }
 }
-const postJSON=(p,b,o={})=>request(p,{method:'POST',body:b,...o}); const getJSON=(p,o={})=>request(p,{method:'GET',...o}); const putJSON=(p,b,o={})=>request(p,{method:'PUT',body:b,...o});
 
-// ===== Storage helpers =====
-const TOKEN_KEY='alphyz.token', USER_KEY='alphyz.user', USER_ID_KEY='alphyz.userId';
-const LEGACY_TOKEN='token', LEGACY_USER='user', LEGACY_USER_ID='userId';
+function setRaw(k, v) { try { localStorage.setItem(k, v); } catch {} }
+function getRaw(k) { try { return localStorage.getItem(k); } catch { return null; } }
+function rmRaw(k) { try { localStorage.removeItem(k); } catch {} }
 
-function setRaw(key, val){ try{ localStorage.setItem(key, val);}catch{} }
-function getRaw(key){ try{ return localStorage.getItem(key);}catch{ return null;} }
-function rmRaw(key){ try{ localStorage.removeItem(key);}catch{} }
-
-export function setToken(t){
-  if(!t) return null;
+// ===== Auth Storage =====
+export function setToken(t) {
+  if (!t) return null;
   setRaw(TOKEN_KEY, t);
-  setRaw(LEGACY_TOKEN, t); // compat
+  setRaw(LEGACY_TOKEN, t);
   return t;
 }
-export function getToken(){
+
+export function getToken() {
   return getRaw(TOKEN_KEY) || getRaw(LEGACY_TOKEN);
 }
-export function clearAuth(){
+
+export function clearAuth() {
   [TOKEN_KEY, USER_KEY, USER_ID_KEY, LEGACY_TOKEN, LEGACY_USER, LEGACY_USER_ID].forEach(rmRaw);
 }
-export function setUser(u){
-  if(!u || typeof u !== 'object') return null;
+
+export function setUser(u) {
+  if (!u || typeof u !== 'object') return null;
   const id = u.id || u._id || u.userId;
-  if (id) { setRaw(USER_ID_KEY, String(id)); setRaw(LEGACY_USER_ID, String(id)); }
+  if (id) {
+    setRaw(USER_ID_KEY, String(id));
+    setRaw(LEGACY_USER_ID, String(id));
+  }
   const json = JSON.stringify(u);
   setRaw(USER_KEY, json);
   setRaw(LEGACY_USER, json);
   return u;
 }
-export function getUserId(){ return getRaw(USER_ID_KEY) || getRaw(LEGACY_USER_ID); }
-export function getUserCached(){ const raw = getRaw(USER_KEY) || getRaw(LEGACY_USER); return raw ? parseJSONSafe(raw) : null; }
-export function isAuthenticated(){ return !!(getToken() || getUserId()); }
+
+export function getUserId() {
+  return getRaw(USER_ID_KEY) || getRaw(LEGACY_USER_ID);
+}
+
+export function getUserCached() {
+  const raw = getRaw(USER_KEY) || getRaw(LEGACY_USER);
+  return raw ? parseJSONSafe(raw) : null;
+}
+
+export function isAuthenticated() {
+  return !!(getToken() || getUserId());
+}
+
+// ===== Networking =====
+async function request(path, { method='GET', body, headers={}, auth=false } = {}) {
+  const init = {
+    method,
+    headers: {
+      'Accept': 'application/json',
+      ...(body ? { 'Content-Type': 'application/json' } : {}),
+      ...headers,
+    },
+  };
+
+  if (auth) {
+    const token = getToken();
+    if (token) init.headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  if (body) init.body = JSON.stringify(body);
+
+  const url = `${API_BASE}${path}`;
+  const res = await fetch(url, init);
+  const text = await res.text();
+  const data = parseJSONSafe(text);
+
+  if (!res.ok) {
+    const err = new Error(data.message || `HTTP ${res.status}`);
+    err.status = res.status;
+    err.data = data;
+    err.requestUrl = url;
+    throw err;
+  }
+
+  return data;
+}
+
+const postJSON = (p,b,o={}) => request(p,{ method:'POST', body:b, ...o });
+const getJSON  = (p,o={}) => request(p,{ method:'GET',  ...o });
+const putJSON  = (p,b,o={}) => request(p,{ method:'PUT', body:b, ...o });
 
 // ===== Helpers =====
-function pathJoinAut(s){const has=/\/autenticar$/.test(API_BASE); return has?`/${s.replace(/^\/+/,'')}`:`/autenticar/${s.replace(/^\/+/,'')}`}
-function normalizeRegisterPayload(i={}){const o={...i}; if(o.cep)o.cep=String(o.cep).replace(/\D/g,''); if(o.numero!=null)o.numero=String(o.numero);
-  return {nome:o.nome??o.name??'',email:o.email??'',senha:o.senha??o.password??'',cpf:o.cpf??'',idade:o.idade??o.age??null,telefone:o.telefone??o.phone??'',
-          rua:o.rua??o.logradouro??'',complemento:o.complemento??'',numero:o.numero??'',cep:o.cep??'',estado:o.estado??o.uf??'',cidade:o.cidade??''};}
-
-function extractCreds(emailArg, senhaArg){
-  let e=emailArg, p=senhaArg;
-  if (e && typeof e === 'object') {
-    if ('email' in e) { p = e.password ?? e.senha ?? p; e = e.email; }
-    else if ('target' in e && e.target && 'value' in e.target) { e = e.target.value; }
-  }
-  if (p && typeof p === 'object' && 'target' in p && p.target && 'value' in p.target) { p = p.target.value; }
-  e = (e == null ? '' : String(e)).trim(); p = (p == null ? '' : String(p)).trim();
-  return { e, p };
+function pathJoinAut(s) {
+  const has = /\/autenticar$/.test(API_BASE);
+  return has ? `/${s.replace(/^\/+/,'')}` : `/autenticar/${s.replace(/^\/+/,'')}`;
 }
 
-function pickToken(resp){
-  return resp?.token ?? resp?.accessToken ?? resp?.jwt ?? resp?.bearer ?? resp?.data?.token ?? null;
-}
+function normalizeRegisterPayload(i = {}) {
+  const o = { ...i };
+  if (o.cep) o.cep = String(o.cep).replace(/\D/g, '');
+  if (o.numero != null) o.numero = String(o.numero);
 
-function pickUser(resp, emailFallback){
-  const u = resp?.user ?? resp?.usuario ?? null;
-  if (u) return u;
-  const id = resp?.userId ?? resp?.id ?? resp?._id ?? null;
-  const nome = resp?.nome ?? resp?.name ?? null;
-  return { id, nome, email: emailFallback };
-}
-
-function normalizeLoginResult(resp, email){
-  const token = pickToken(resp) || 'dev-token'; // fallback para guards baseados em token
-  const user  = pickUser(resp, email);
-  const userId = user?.id || user?._id || resp?.userId || null;
   return {
-    ok: true,
-    message: resp?.message || 'OK',
-    token,
-    user,
-    userId
+    nome: o.nome ?? o.name ?? '',
+    email: o.email ?? '',
+    senha: o.senha ?? o.password ?? '',
+    cpf: o.cpf ?? '',
+    idade: o.idade ?? o.age ?? null,
+    telefone: o.telefone ?? o.phone ?? '',
+    rua: o.rua ?? o.logradouro ?? '',
+    complemento: o.complemento ?? '',
+    numero: o.numero ?? '',
+    cep: o.cep ?? '',
+    estado: o.estado ?? o.uf ?? '',
+    cidade: o.cidade ?? '',
   };
 }
 
+function extractCreds(emailArg, senhaArg) {
+  let e = emailArg, p = senhaArg;
+
+  if (e && typeof e === 'object') {
+    if ('email' in e) {
+      p = e.password ?? e.senha ?? p;
+      e = e.email;
+    } else if ('target' in e && e.target?.value) {
+      e = e.target.value;
+    }
+  }
+
+  if (p && typeof p === 'object' && p.target?.value) p = p.target.value;
+
+  e = (e == null ? '' : String(e)).trim();
+  p = (p == null ? '' : String(p)).trim();
+  return { e, p };
+}
+
+function pickToken(r) {
+  return r?.token || r?.accessToken || r?.jwt || r?.bearer || r?.data?.token || null;
+}
+
+function pickUser(r, emailFallback) {
+  const u = r?.user || r?.usuario;
+  if (u) return u;
+  const id = r?.userId || r?.id || r?._id || null;
+  const nome = r?.nome || r?.name || null;
+  return { id, nome, email: emailFallback };
+}
+
+function normalizeLoginResult(resp, email) {
+  const token = pickToken(resp) || 'dev-token';
+  const user = pickUser(resp, email);
+  const userId = user?.id || user?._id || resp?.userId || null;
+  return { ok: true, message: resp?.message || 'OK', token, user, userId };
+}
+
 // ===== API =====
-export async function registerUser(formData={}){
+export async function registerUser(formData = {}) {
   return await postJSON(pathJoinAut('cadastrar'), normalizeRegisterPayload(formData));
 }
 
-export async function login(email, senha){
+export async function login(email, senha) {
   const { e, p } = extractCreds(email, senha);
-  if(!e || !p){ const err=new Error('E-mail e senha são obrigatórios'); err.status=400; throw err; }
+  if (!e || !p) {
+    const err = new Error('E-mail e senha são obrigatórios');
+    err.status = 400;
+    throw err;
+  }
 
-  // 1) tentativa canônica
   let resp;
-  try { resp = await postJSON(pathJoinAut('login'), { email: e, password: p }); }
-  catch(err1){
-    if(err1 && (err1.status===400 || err1.status===401 || err1.status===404)){
+  try {
+    resp = await postJSON(pathJoinAut('login'), { email: e, password: p });
+  } catch (err1) {
+    if ([400,401,404].includes(err1.status)) {
       resp = await postJSON(pathJoinAut('login'), { email: e, senha: p });
-    } else { throw err1; }
+    } else {
+      throw err1;
+    }
   }
 
   const norm = normalizeLoginResult(resp, e);
@@ -118,66 +203,123 @@ export async function login(email, senha){
   return norm;
 }
 
-// Auxiliares com fallback
-export async function me(){
+export async function me() {
   if (isAuthenticated()) {
-    const paths=['/usuarios/me','/me',pathJoinAut('me')];
-    for(const p of paths){
-      try{ const d=await getJSON(p,{auth:true}); const u=d.user||d.usuario||d; if(u) setUser(u); return d; }
-      catch(e){ if(e.status && ![404,405].includes(e.status)) throw e; }
+    const paths = ['/usuarios/me','/me', pathJoinAut('me')];
+    for (const p of paths) {
+      try {
+        const d = await getJSON(p, { auth:true });
+        const u = d.user || d.usuario || d;
+        if (u) setUser(u);
+        return d;
+      } catch (e) {
+        if (e.status && ![404,405].includes(e.status)) throw e;
+      }
     }
     return { user: getUserCached() };
   }
-  return { user: null };
+  return { user:null };
 }
-export const apiMe=me;
+export const apiMe = me;
 
-export async function getUser(id){
-  if(!id){ const c=getUserCached(); if(c) return c; }
-  for(const p of [`/usuarios/${id}`,`/users/${id}`]){
-    try{ const d=await getJSON(p,{auth:true}); return d.user||d.usuario||d; }
-    catch(e){ if(e.status && ![404,405].includes(e.status)) throw e; }
+export async function getUser(id) {
+  if (!id) {
+    const c = getUserCached();
+    if (c) return c;
   }
-  const c=getUserCached(); if(c&&(c.id===id||c._id===id)) return c;
-  return { id, nome:'Usuário', posts:[] };
-}
 
-export async function getUserPosts(id){
-  for(const p of [`/usuarios/${id}/posts`,`/users/${id}/posts`]){
-    try{ const d=await getJSON(p,{auth:true}); return d.posts||d; }
-    catch(e){ if(e.status && ![404,405].includes(e.status)) throw e; }
+  for (const p of [`/usuarios/${id}`, `/users/${id}`]) {
+    try {
+      const d = await getJSON(p, { auth:true });
+      return d.user || d.usuario || d;
+    } catch (e) {
+      if (e.status && ![404,405].includes(e.status)) throw e;
+    }
   }
-  return [];
+
+  const c = getUserCached();
+  if (c && (c.id === id || c._id === id)) return c;
+  return { id, nome:'Usuário', produtos:[] };
 }
 
-export async function createPost(input){
-  for(const p of ['/posts','/usuarios/posts','/users/posts']){
-    try{ const d=await postJSON(p,input,{auth:true}); return d.post||d; }
-    catch(e){ if(e.status && ![404,405].includes(e.status)) throw e; }
+export async function getUserProducts(id){
+  try {
+    const d = await getJSON(`/produtos/usuario/${id}`, { auth: true });
+    return d || [];
+  } catch (e) {
+    if (e.status && ![404,405].includes(e.status)) throw e;
+    return [];
   }
-  const u=getUserCached()||{};
-  return { id:`local_${Date.now()}`, authorId:u.id||u._id||null, ...input, _localOnly:true };
 }
 
-export async function updateMe(patch){
-  for(const p of ['/usuarios/me','/users/me','/me']){
-    try{ const d=await putJSON(p,patch,{auth:true}); const u=d.user||d.usuario||d; if(u) setUser(u); return u||d; }
-    catch(e){ if(e.status && ![404,405].includes(e.status)) throw e; }
+export async function createProduct(data) {
+  const token = getToken();
+  const usuarioId = getUserId();
+
+  const payload = {
+    ...data,
+    usuarioId
+  };
+
+  const response = await fetch(`${API_BASE}/produtos`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    throw new Error("Erro ao criar produto");
   }
-  const cur=getUserCached()||{}; const m={...cur,...patch}; setUser(m); return m;
+
+  return response.json();
 }
 
-export async function reportUser(targetUserId,motivo){
-  const b={userId:targetUserId,motivo};
-  for(const p of ['/reports/user','/usuarios/report','/users/report']){
-    try{ const d=await postJSON(p,b,{auth:true}); return d; }
-    catch(e){ if(e.status && ![404,405].includes(e.status)) throw e; }
+export async function updateMe(patch) {
+  for (const p of ['/usuarios/me','/users/me','/me']) {
+    try {
+      const d = await putJSON(p, patch, { auth:true });
+      const u = d.user || d.usuario || d;
+      if (u) setUser(u);
+      return u || d;
+    } catch (e) {
+      if (e.status && ![404,405].includes(e.status)) throw e;
+    }
+  }
+  const cur = getUserCached() || {};
+  const m = { ...cur, ...patch };
+  setUser(m);
+  return m;
+}
+
+export async function reportUser(targetUserId, motivo) {
+  const b = { userId: targetUserId, motivo };
+  for (const p of ['/reports/user','/usuarios/report','/users/report']) {
+    try {
+      return await postJSON(p, b, { auth:true });
+    } catch (e) {
+      if (e.status && ![404,405].includes(e.status)) throw e;
+    }
   }
   return { ok:true, message:'Denúncia registrada (local)' };
 }
 
-// Default + aliases
-const api={API_BASE,login,registerUser,me,getUser,getUserPosts,createPost,updateMe,reportUser,setToken,getToken,clearAuth,setUser,getUserId,getUserCached,isAuthenticated};
+// ===== Default Export + Aliases =====
+const api = {
+  API_BASE,
+  login, registerUser,
+  me, getUser, getUserProducts,
+  updateMe, reportUser,
+  setToken, getToken, clearAuth,
+  setUser, getUserId, getUserCached, isAuthenticated,
+};
 export default api;
-export const apiLogin=login; export const authenticate=login; export const signIn=login;
-export const apiRegister=registerUser; export const cadastro=registerUser; export const signUp=registerUser;
+
+export const apiLogin = login;
+export const authenticate = login;
+export const signIn = login;
+export const apiRegister = registerUser;
+export const cadastro = registerUser;
+export const signUp = registerUser;

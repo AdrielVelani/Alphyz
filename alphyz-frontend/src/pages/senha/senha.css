@@ -10,7 +10,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* ocupa toda a tela */
+  height: 100vh;
+  padding: 1rem; /* evita que o card corte nas bordas */
 }
 
 /* ====== CARD ====== */
@@ -26,16 +27,25 @@ body {
 /* ====== TÍTULO E TEXTO ====== */
 .brand {
   display: flex;
+  flex-direction: column; /* impede que o texto fique ao lado */
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.5rem;
   margin-bottom: 1.5rem;
+  text-align: center;
 }
 
+.brand h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 700;
+}
 
 .lead {
   color: #555;
   font-size: 0.9rem;
+  max-width: 280px; /* evita estourar o card */
+  line-height: 1.3;
 }
 
 /* ====== FORM ====== */
@@ -125,6 +135,7 @@ input:focus {
 .footer-text a:hover {
   text-decoration: underline;
 }
+
 /* === POPUP === */
 .popup-overlay {
   position: fixed;
@@ -183,15 +194,6 @@ input:focus {
   font-size: 0.9rem;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { transform: translateY(25px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
 .erro-texto, .error {
   color: #ff3b3b;
   font-size: 14px;
@@ -202,4 +204,36 @@ input:focus {
   color: #22bb33;
   font-size: 14px;
   margin-top: 4px;
+}
+
+/* ====== ANIMAÇÕES ====== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(25px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ====== RESPONSIVIDADE ====== */
+@media (max-width: 480px) {
+  .card {
+    width: 100%;
+    padding: 1.5rem;
+  }
+
+  .brand h1 {
+    font-size: 1.6rem;
+  }
+
+  .lead {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
 }

@@ -40,6 +40,25 @@ public class UsuarioController {
         return usuarioRepository.save(usuario);
     }
 
+    // Buscar usuário por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Usuario> buscarPorId(@PathVariable String id) {
+        return usuarioRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // ================================
+    // GET /usuarios/{id}/
+    // ================================
+ @GetMapping("/{id}/produtos")
+public ResponseEntity<?> listarProdutosDoUsuario(@PathVariable String id) {
+    return usuarioService.listarProdutosDoUsuario(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+}
+
+
     // Adiciona review
     @PostMapping("/{id}/reviews")
     public ResponseEntity<?> addReview(@PathVariable String id, @RequestBody ReviewDTO review) {
@@ -47,7 +66,7 @@ public class UsuarioController {
         return ResponseEntity.ok("Review added successfully.");
     }
 
-    // ✅ Endpoint de recuperação de senha
+    // Endpoint de recuperação de senha
     @PostMapping("/recuperar-senha")
     public ResponseEntity<String> recuperarSenha(@RequestBody String email) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email.trim()).stream().findFirst();
@@ -58,7 +77,6 @@ public class UsuarioController {
 
         Usuario usuario = usuarioOpt.get();
 
-        // Cria token de recuperação e define validade (10 minutos)
         String token = UUID.randomUUID().toString();
         long expira = Instant.now().plusSeconds(600).toEpochMilli();
 
@@ -66,13 +84,11 @@ public class UsuarioController {
         usuario.setTokenExpiration(expira);
         usuarioRepository.save(usuario);
 
-        // Monta o corpo do e-mail
         String link = "http://localhost:3000/redefinir-senha?token=" + token;
         String corpo = "Olá, " + usuario.getNome() + "!\n\n"
                 + "Você solicitou a redefinição de senha. Clique no link abaixo para redefinir (válido por 10 minutos):\n"
                 + link + "\n\nSe não foi você, ignore este e-mail.";
 
-        // Envia o e-mail
         emailService.enviarEmail(usuario.getEmail(), "Recuperação de senha", corpo);
 
         return ResponseEntity.ok("E-mail de recuperação enviado com sucesso!");

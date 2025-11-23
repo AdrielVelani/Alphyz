@@ -11,7 +11,7 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    // ✅ Método padronizado
+    // Método padronizado
     public void enviarEmail(String destinatario, String assunto, String corpo) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(destinatario);

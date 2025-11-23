@@ -9,8 +9,10 @@ import java.util.List;
 
 @Document(collection = "Usuario")
 public class Usuario {
+
     @Id
     private String id;
+
     private String nome;
     private String senha;
     private String telefone;
@@ -20,130 +22,67 @@ public class Usuario {
     private Integer cep;
     private String cidade;
     private String estado;
+
     private Role role;
-    private List<String> reviews = new ArrayList<>();
 
-
-    @Indexed(unique=true)
+    @Indexed(unique = true)
     private String email;
-    @Indexed(unique=true)
+
+    @Indexed(unique = true)
     private String cpf;
-    
+
     private String resetToken;
     private Long tokenExpiration;
 
-    public String getId() {
-        return id;
-    }
+    private List<String> reviews = new ArrayList<>();
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    // GETTERS E SETTERS
 
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
 
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getTelefone() { return telefone; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
 
+    public String getRua() { return rua; }
+    public void setRua(String rua) { this.rua = rua; }
 
-    public String getSenha() {
-        return senha;
-    }
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+    public String getComplemento() { return complemento; }
+    public void setComplemento(String complemento) { this.complemento = complemento; }
 
+    public Integer getNumero() { return numero; }
+    public void setNumero(Integer numero) { this.numero = numero; }
 
-    public String getCpf() {
-        return cpf;
-    }
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
+    public Integer getCep() { return cep; }
+    public void setCep(Integer cep) { this.cep = cep; }
 
+    public String getCidade() { return cidade; }
+    public void setCidade(String cidade) { this.cidade = cidade; }
 
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 
-    public String getTelefone() {
-        return telefone;
-    }
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 
-    public String getRua() {
-        return rua;
-    }
-    public void setRua(String rua) {
-        this.rua = rua;
-    }
-    public String getComplemento() {
-        return complemento;
-    }
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
-    }
-    public Integer getNumero() {
-        return numero;
-    }
-    public void setNumero(Integer numero) {
-        this.numero = numero;
-    }
-    public Integer getCep() {
-        return cep;
-    }
-    public void setCep(Integer cep) {
-        this.cep = cep;
-    }
-    public String getCidade() {
-        return cidade;
-    }
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-    public String getEstado() {
-        return estado;
-    }
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
- public Role getRole() {
-        return role;
- }
- public void setRole(Role role) {
-        this.role = role;
- }
- public List<String> getReviews() {
-        return reviews;
-    }
-    public void setReviews(List<String> reviews) {
-        this.reviews = reviews;
-    }
-    public String getResetToken() {
-    return resetToken;
-    }
+    public String getCpf() { return cpf; }
+    public void setCpf(String cpf) { this.cpf = cpf; }
 
-    public void setResetToken(String resetToken) {
-        this.resetToken = resetToken;
-   }
+    public List<String> getReviews() { return reviews; }
+    public void setReviews(List<String> reviews) { this.reviews = reviews; }
 
-    public Long getTokenExpiration() {
-        return tokenExpiration;
-    }
+    public String getResetToken() { return resetToken; }
+    public void setResetToken(String resetToken) { this.resetToken = resetToken; }
 
-    public void setTokenExpiration(Long tokenExpiration) {
-         this.tokenExpiration = tokenExpiration;
-    }
-
+    public Long getTokenExpiration() { return tokenExpiration; }
+    public void setTokenExpiration(Long tokenExpiration) { this.tokenExpiration = tokenExpiration; }
 }

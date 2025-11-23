@@ -10,8 +10,8 @@ import SiteHeader from "../../components/SiteHeader";
 
 import {
   getUser,
-  getUserPosts,
-  createPost,
+  getUserProducts,
+  createProduct,
   reportUser,
   updateMe,
   getUserId,
@@ -30,7 +30,7 @@ function NovoPostModal({ open, onClose, onSubmit }) {
   const [nome, setNome] = useState("");
   const [tamanho, setTamanho] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [preco, setPreco] = useState("");
+  const [trocar, settrocar] = useState("");
   const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
@@ -76,8 +76,8 @@ function NovoPostModal({ open, onClose, onSubmit }) {
             <div className="perfil-field">
               <label>Preço</label>
               <input
-                value={preco}
-                onChange={(e) => setPreco(e.target.value)}
+                value={trocar}
+                onChange={(e) => settrocar(e.target.value)}
                 placeholder="Ex.: KLV$120"
               />
             </div>
@@ -99,7 +99,7 @@ function NovoPostModal({ open, onClose, onSubmit }) {
           <button
             className="btn btn-primary"
             onClick={async () => {
-              await onSubmit?.({ nome, tamanho, descricao, preco, imageFile });
+              await onSubmit?.({ nome, tamanho, descricao, trocar, imageFile });
               onClose();
             }}
           >
@@ -204,7 +204,7 @@ export default function Perfil() {
   const menuRef = useRef(null);
 
   const [perfil, setPerfil] = useState(null);
-  const [posts, setPosts] = useState([]);
+  const [produtos, setProdutos] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -241,8 +241,8 @@ export default function Perfil() {
         reviews: u.reviews ?? 50,
       });
 
-      const arr = await getUserPosts(ownerId);
-      setPosts(Array.isArray(arr) ? arr : []);
+      const arr = await getUserProducts(ownerId);
+      setProdutos(Array.isArray(arr) ? arr : []);
     } catch (e) {
       console.error(e);
       // fallback simples para não quebrar o layout
@@ -256,7 +256,7 @@ export default function Perfil() {
         rating: 5,
         reviews: 0,
       });
-      setPosts([]);
+      setProdutos([]);
     } finally {
       setLoading(false);
     }
@@ -268,17 +268,17 @@ export default function Perfil() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeId]);
 
-  async function handleCreatePost(form) {
+  async function handleCreateProduct(form) {
     try {
-      await createPost({
+      await createProduct({
         nome: form.nome,
         tamanho: form.tamanho,
         descricao: form.descricao,
-        preco: form.preco,
+        trocar: form.trocar,
         image: form.imageFile,
       });
-      const arr = await getUserPosts(perfil.id);
-      setPosts(Array.isArray(arr) ? arr : []);
+      const arr = await getUserProducts(perfil.id);
+      setProdutos(Array.isArray(arr) ? arr : []);
     } catch (e) {
       console.error(e);
       alert(e.message || "Falha ao criar post");
@@ -406,7 +406,7 @@ export default function Perfil() {
                   <span>Novo post</span>
                 </button>
               )}
-              {posts.map((p, i) => (
+              {produtos.map((p, i) => (
                 <div key={p.id || p._id || i} className="perfil-card">
                   <div className="perfil-card-img">
                     {p.imageUrl ? (
@@ -421,7 +421,7 @@ export default function Perfil() {
                       <div className="perfil-tag">{p.tamanho}</div>
                     </div>
                     <div className="perfil-row2">
-                      <div className="perfil-preco">{p.preco ?? "KLV$"}</div>
+                      <div className="perfil-trocar">{p.trocar ?? "KLV$"}</div>
                       <button className="perfil-save" aria-label="Favoritar">♡</button>
                     </div>
                   </div>
@@ -474,7 +474,7 @@ export default function Perfil() {
       <NovoPostModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        onSubmit={handleCreatePost}
+        onSubmit={handleCreateProduct}
       />
       <EditarPerfilModal
         open={openEdit}

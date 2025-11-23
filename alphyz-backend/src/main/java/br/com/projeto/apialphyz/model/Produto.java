@@ -3,67 +3,37 @@ package br.com.projeto.apialphyz.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "Roupa")
+@Document(collection = "roupa") // sua collection chama roupa, mas guarda produtos
 public class Produto {
+
     @Id
     private String id;
+
     private String nome;
-    private String tamanho;
     private String descricao;
-    private String imgURL;
-    private boolean ativo = true;
-    //Ver onde colocar (Talvez precise ser no admin): private double preco;
+    private Double preco;
 
+    // este campo é essencial
+    private String usuarioId;
 
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
-    public String getDescricao() {
-        return descricao;
-    }
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+    public Produto() {}
 
-
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
+    public Produto(String nome, String descricao, Double preco, String usuarioId) {
         this.nome = nome;
+        this.descricao = descricao;
+        this.preco = preco;
+        this.usuarioId = usuarioId;
     }
 
-    public void setTamanho(String tamanho) {
-        this.tamanho = tamanho;
-    }
+    public String getId() { return id; }
+    public String getNome() { return nome; }
+    public String getDescricao() { return descricao; }
+    public Double getPreco() { return preco; }
+    public String getUsuarioId() { return usuarioId; }
 
-    public String getTamanho() {
-        return tamanho;
-    }
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
-    }
-
-    public String getImgURL() {
-        return imgURL;
-    }
-
-    public void setImgURL(String imgURL) {
-        this.imgURL = imgURL;
-    }
-
-    // public double getPreco() {
-    //    return preco;
-    //  }
-    //  public void setPreco(double preco) {
-    //     this.preco = preco;
-    //}
-
+    public void setId(String id) { this.id = id; }
+    public void setNome(String nome) { this.nome = nome; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public void setPreco(Double preco) { this.preco = preco; }
+    public void setUsuarioId(String usuarioId) { this.usuarioId = usuarioId; }
 }

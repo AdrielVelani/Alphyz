@@ -59,9 +59,7 @@ export default function SiteHeader() {
             >
               <FaUserCircle aria-label="Ícone de Perfil" />
             </a>
-            <button type="button" className="header-login" onClick={logout}>
-              SAIR
-            </button>
+            <button onClick={logout} className="header-logout">SAIR</button>
           </>
         ) : (
           <>

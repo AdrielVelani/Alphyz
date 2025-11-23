@@ -16,6 +16,4 @@ public class ApiAlphyzApplication {
     @Autowired
     private UsuarioController usuarioController;
 
-
-
 }

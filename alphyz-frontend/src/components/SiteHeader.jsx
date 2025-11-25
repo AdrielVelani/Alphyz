@@ -7,15 +7,7 @@ import logo from "../assets/logo.png";
 import pergunta from "../assets/pergunta.png";
 import chat from "../assets/chat.png";
 
-/**
- * Cabeçalho padrão do site (mantém as mesmas classes/HTML da sua UI).
- * - Logo clica -> /shopping
- * - "Sobre nós" -> /home
- * - Ícone usuário preto -> /perfil (quando logado)
- * - Botão SAIR (quando logado)
- * - LOGIN / CADASTRE-SE (quando deslogado)
- */
-export default function SiteHeader() {
+export default function SiteHeader({ onBuscaChange }) {
   const isAuth = !!getToken();
 
   const logout = () => {
@@ -25,41 +17,39 @@ export default function SiteHeader() {
 
   return (
     <header className="header">
-      {/* LOGO -> /shopping */}
       <div className="header-logo">
-        <a href="/shopping" aria-label="Voltar para a loja">
+        <a href="/shopping">
           <img src={logo} alt="Alphyz" />
         </a>
       </div>
 
-      {/* Busca central (mantido igual ao shopping/perfil) */}
+      {/* BUSCA FUNCIONANDO */}
       <div className="header-search">
-        <FaSlidersH className="search-icon-left" aria-label="Filtros de busca" />
+        <FaSlidersH className="search-icon-left" />
+
         <div className="search-wrapper">
-          <input type="text" placeholder="O que você está buscando?" className="search-input" />
-          <FaSearch className="search-icon-right" aria-label="Pesquisar" />
+          <input
+            type="text"
+            placeholder="O que você está buscando?"
+            className="search-input"
+            onChange={(e) => onBuscaChange && onBuscaChange(e.target.value)}
+          />
+          <FaSearch className="search-icon-right" />
         </div>
       </div>
 
-      {/* Bloco direito */}
       <div className="header-right">
         <a href="/home" className="header-link">SOBRE NÓS</a>
         <img src={pergunta} className="header-icon" alt="ajuda" />
         <img src={chat} className="header-icon" alt="chat" />
-        <FaShoppingCart className="header-icon" aria-label="Carrinho de compras" />
+        <FaShoppingCart className="header-icon" />
 
         {isAuth ? (
           <>
-            <a
-              href="/perfil"
-              className="header-icon user"
-              title="Meu perfil"
-              aria-label="Meu perfil"
-              style={{ color: "#000" }}
-            >
-              <FaUserCircle aria-label="Ícone de Perfil" />
+            <a href="/perfil" className="header-icon user" style={{ color: "#000" }}>
+              <FaUserCircle />
             </a>
-            <button onClick={logout} className="header-logout">SAIR</button>
+            <button className="header-btn" onClick={logout}>SAIR</button>
           </>
         ) : (
           <>
